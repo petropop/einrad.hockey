@@ -12,7 +12,7 @@ $content= "Dieser Guide soll ein Anhaltspunkt für Einradhockeyeinsteiger und -f
 include '../../templates/header.tmp.php';
 ?>
 <h1 class="w3-text-primary w3-center w3-bottombar w3-border-tertiary">Richtig Einradhockey</h1>
-<p class="w3-text-grey">Diese Seite soll ein Anhaltspunkt für Einradhockeyeinsteiger und -fortgeschrittene sein, wie man richtig Einradhockey spielen kann. Hierbei ist natürlich zu beachten, dass dieser Guide nicht den Anspruch hat immer perfekt zu sein. Er fußt hauptsächlich auf Erfahrungen des in Mörfelden gespielten Einradhockeys (17x&nbsp;Deutscher Meister seit 2000, Stand 2020).</p>
+<p class="w3-text-grey">Diese Seite soll ein Anhaltspunkt für Einradhockeyeinsteiger und -fortgeschrittene sein, wie man richtig Einradhockey spielen kann. Hierbei ist natürlich zu beachten, dass dieser Guide nicht den Anspruch hat, absolut richtig zu sein. Er fußt hauptsächlich auf Erfahrungen des in Mörfelden gespielten Einradhockeys (17x&nbsp;Deutscher Meister seit 2000, Stand 2020).</p>
 <h2 class="w3-text-primary">Allgemeines</h2>
 <p class="">Einradfahrer sollten erst mit dem Einradhockey beginnen, wenn sie sicher Einradfahren können. Sie sollten also mindestens Vorwärts, Rückwärts, den freien Aufstieg und das enge Kurvenfahren beherrschen. Einbeinigfahren ist ein guter Anhaltspunkt, dass ein Einradfahrer fürs Einradhockey bereit ist.</p>
 <h2 class="w3-text-primary">Ausrüstung</h2>
@@ -32,7 +32,7 @@ include '../../templates/header.tmp.php';
         </tr>
         <tr>
             <th class="w3-primary" style="vertical-align: middle;">Kurbeln</th>
-            <td>Kurbellänge 100&nbsp;cm oder 115&nbsp;cm, im Idealfall aus Aluminium</td>
+            <td>Kurbellänge ~100&nbsp;cm oder ~115&nbsp;cm, im Idealfall aus Aluminium</td>
         </tr>
         <tr>
             <th class="w3-primary" style="vertical-align: middle;">Pedale</th>
@@ -40,11 +40,11 @@ include '../../templates/header.tmp.php';
         </tr>
         <tr>
             <th class="w3-primary" style="vertical-align: middle;">Schuhe</th>
-            <td>Hallenschuhe mit dünner Sohle und kurzen Schnürsenkeln</td>
+            <td>Hallenschuhe mit dünnen Sohlen und kurzen Schnürsenkeln</td>
         </tr>
         <tr>
             <th class="w3-primary" style="vertical-align: middle;">Schläger</th>
-            <td>Schläger sollten leicht sein. One-Piece Schläger sind gegenüber Schlägern mit gesteckter Kelle zu empfehlen. Wenn die Kelle geschäumt ist, kann es sein, dass sich die Kelle nach einiger Zeit spaltet. Bei hochwertigen Schlägern (>&nbsp;100&nbsp;Euro) tritt dies später auf, als bei günstigen. Holzschläger sind nicht mehr zu empfehlen. Damit die Kelle nicht abgerieben wird, kann man die Kelle am unteren Ende regelmäßig mit richtigem Eishockeytape tapen.</td>
+            <td>Schläger sollten leicht sein. One-Piece Schläger sind gegenüber Schlägern mit gesteckter Kelle zu empfehlen. Wenn die Kelle geschäumt ist, kann es sein, dass sich die Kelle nach einiger Zeit spaltet. Bei hochwertigen Schlägern (>&nbsp;100&nbsp;Euro) tritt dies später auf, als bei günstigen. Damit die Kelle nicht abgerieben wird, kann man die Kelle am unteren Ende regelmäßig mit richtigem Eishockeytape tapen. Holzschläger sind nicht mehr zu empfehlen.</td>
         </tr>
     </table>
 </div>
@@ -60,7 +60,7 @@ include '../../templates/header.tmp.php';
 <div class="w3-margin-left">
     <ul class="w3-ul w3-leftbar w3-border-tertiary">
         <li>Auf dem Einrad sitzend: Schläger reicht vom Boden aus etwa zwischen Brustbein und Kinn</li>
-        <li>Guter Ansatzpunkt: leicht unter Schulterhöhe</li>
+        <li>Guter Ansatzpunkt: leicht unter Schulterhöhe (wieder auf dem Einrad sitzend)</li>
     </ul>
 </div>
 <h3 class="w3-text-grey">Schlägerhaltung</h3>
@@ -80,8 +80,8 @@ include '../../templates/header.tmp.php';
 <h3 class="w3-text-grey">Pässe</h3>
 <div class="w3-margin-left">
     <ul class="w3-ul w3-leftbar w3-border-tertiary w3-primary">
-    <li>Pässe sollten unbedingt immer flach gespielt werden: Flache Pässe kann man leicht spielen, indem man beim Passen den Schläger mit Ball in der Kelle aktiv über den Boden zieht (man sollte ihn hören können).</li>
-        <li>Pässe in den Fahrweg des passanehmenden Spielers spielen</li>
+    <li>Pässe sollten unbedingt flach gespielt werden: Flache Pässe kann man leicht spielen, indem man beim Passen den Schläger mit Ball in der Kelle aktiv über den Boden zieht (man sollte ihn hören können).</li>
+        <li>Pässe in den Fahrweg des passannehmenden Spielers spielen</li>
         <li>Man sollte sowohl Rückhand- wie auch Vorhandpässe verwenden</li>
         <li>Hochschauen zum Spieler, dem man zupasst</li>
         <li>Bälle bleiben bei der Ballannahme flach, wenn man diese mit Gefühl annimmt, die Kelle nicht zu offen hält und den Schläger nicht zu fest hält.</li>
@@ -102,7 +102,7 @@ include '../../templates/header.tmp.php';
 </div>
 <p>Es gibt zwei Verteidiger und zwei Stürmer. Positionen sollten hierbei nicht zu starr eingehalten werden. Verteidiger können zum Beispiel mit Stürmern tauschen und in den Angriff fahren, der Stürmer muss dann dementsprechend die Position des Verteidigers übernehmen. Der Torwart wird aktiv ins Spiel eingebunden und sollte sich immer anbieten. Stürmer müssen in der Verteidigung zurücksprinten und aktiv aushelfen.</p>
 <h3 class="w3-text-grey">Angriff</h3>
-<p>Im Angriff sollten die Stürmer versetzt stehen und sich immer anbieten und aktiv in Bewegung bleiben. Wichtig ist, dass die Stürmer dabei nicht immer außen kleben bleiben, sondern zumindest ein Stürmer in die Mitte zieht. Die Verteidiger rücken bis zur Mittellinie auf.</p>
+<p>Im Angriff sollten die Stürmer versetzt stehen und sich immer anbieten und aktiv in Bewegung bleiben. Wichtig ist, dass die Stürmer dabei nicht außen kleben bleiben, sondern zumindest ein Stürmer in die Mitte zieht. Die Verteidiger rücken bis zur Mittellinie auf.</p>
 <div style="max-width: 700px">
     <a href='../bilder/richtig_einradhockey/angriff.png'>
         <img class="w3-image" src="../bilder/richtig_einradhockey/angriff.png">
@@ -124,8 +124,8 @@ include '../../templates/header.tmp.php';
         <p>Befindet sich der Ball beim rechten Stürmer, rückt der linke Verteidiger bis zum Mittelpunkt auf. Der rechte Verteidiger bietet sich an der Linie an. Der linke Stürmer bietet sich versetzt zum rechten Stürmer an.</p>
     </div>
 </div>
-<h3 class="w3-text-grey">Abstoss</h3>
-<p>Hat der Gegner nach einem Tor den Ball, ist es wichtig die Mitte zuzumachen. Die Spieler bilden jetzt ein "T", dabei rückt einer der Verteidiger nach außen an die Mittellinie vor und der andere Verteidiger die Mitte. ein Stürmer übernimmt den Mittelpunkt.</p>
+<h3 class="w3-text-grey">Anstoss</h3>
+<p>Hat der Gegner nach einem Tor den Ball, ist es wichtig die Mitte zuzumachen. Die Spieler bilden jetzt ein "T", dabei rückt einer der Verteidiger nach außen an die Mittellinie vor und der andere Verteidiger rückt in die Mitte der eigenen Hälfte. Ein Stürmer übernimmt den Mittelpunkt.</p>
 <div style="max-width: 700px">
     <a href='../bilder/richtig_einradhockey/abstoss.png'>
         <img class="w3-image" src="../bilder/richtig_einradhockey/abstoss.png">
