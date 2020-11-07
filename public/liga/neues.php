@@ -120,7 +120,9 @@ include '../../templates/header.tmp.php';
         
         <!-- Statistik -->
         <div class="w3-panel w3-card w3-light-grey w3-border-primary w3-leftbar w3-responsive">
-        <h2 class="w3-text-primary"><i style="font-size: 31px; vertical-align: -19%;" class="material-icons">insert_chart_outlined</i> Statistik</h2>
+        <a href='statistics.php' class="no">
+            <h2 class="w3-text-primary"><i style="font-size: 31px; vertical-align: -19%;" class="material-icons">insert_chart_outlined</i> Statistik</h2>
+        </a>
         <p class="w3-text-grey w3-border-top w3-border-grey"></p>
             <p><?=Form::link("ergebnisse.php", ($anz_last_turniere ?: '0') . " Turniere")?> gespielt</p>
             <p><?=Form::link("turniere.php", ($anz_next_turniere ?: '0') . " Turniere")?> ausstehend</p>

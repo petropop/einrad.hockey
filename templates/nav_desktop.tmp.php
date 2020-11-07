@@ -94,6 +94,7 @@
                 <a href="../liga/teams.php" class="w3-bar-item w3-button">Teams</a>
                 <a href="../liga/tabelle.php#meister" class="w3-bar-item w3-button">Meisterschaftstabelle</a>
                 <a href="../liga/tabelle.php#rang" class="w3-bar-item w3-button">Rangtabelle</a>
+                <a href="../liga/statistics.php" class="w3-bar-item w3-button">Saisonstatistik</a>
             </div>
         </div>
 
