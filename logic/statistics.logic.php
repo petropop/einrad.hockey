@@ -5,7 +5,7 @@
     $turniere = number_format($statistics->turniere, 0, ",", ".");
     $spiele = number_format($statistics->spiele, 0, ",", ".");
     $punkte = number_format($statistics->punkte, 0, ",", ".");
-    $gesamt_tore = number_format($statistics->tore, 0, ",", ".");
+    $gesamt_tore = number_format($statistics->gesamt_tore, 0, ",", ".");
     $spielzeit = secondsToTime($statistics->spielzeit * 60);
     $penalty = number_format($statistics->penalty, 0, ",", ".");
     $tore = number_format($statistics->tore, 0, ",", ".");
