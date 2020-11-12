@@ -11,6 +11,7 @@ class Statistics{
     public $penalty;
     public $tore;
     public $gegentore;
+    public $hoechster_sieg;
     
     function __construct() {
         $this->turniere = $this->get_aktuelle_turniere();
@@ -21,6 +22,7 @@ class Statistics{
         $this->penalty = $this->get_aktuelle_penalty();
         $this->tore = $this->get_aktuelle_tore();
         $this->gegentore = $this->get_aktuelle_gegentore();
+        $this->hoechster_sieg=$this->get_hoechster_sieg();
     }
 
     function get_aktuelle_turniere() {
@@ -156,6 +158,20 @@ class Statistics{
         $result = mysqli_fetch_assoc($result);
 
         return $result['gegentore'];
+    }
+
+    function get_hoechster_sieg () {
+        $sql = "
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
+        FROM `spiele`
+        WHERE abs(tore_a-tore_b) = (SELECT 
+                              MAX(abs(tore_a-tore_b))
+                              FROM `spiele`)
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+
+        return $result;
     }
 
 }
