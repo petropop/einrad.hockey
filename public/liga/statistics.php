@@ -73,4 +73,34 @@ include '../../templates/header.tmp.php';
     </div>
 </div>
 
+<div class="w3-row">
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-secondary">
+            <p class="w3-center w3-large">Spielerinnen</p>
+            <p class="w3-center w3-xxxlarge"><?=$spielerinnen?></p>
+        </div>
+    </div>
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-secondary">
+            <p class="w3-center w3-large">Spieler</p>
+            <p class="w3-center w3-xxxlarge"><?=$spieler?></p>
+        </div>
+    </div>
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-secondary">
+            <p class="w3-center w3-large">Kader</p>
+            <p class="w3-center w3-xxxlarge"><?=$kader?></p>
+        </div>
+    </div>
+</div>
+
+<div class="w3-row">
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-secondary">
+            <p class="w3-center w3-large">Schiedsrichter*innen</p>
+            <p class="w3-center w3-xxxlarge"><?=$schiedsrichter?></p>
+        </div>
+    </div>
+</div>
+
 <?php include '../../templates/footer.tmp.php';

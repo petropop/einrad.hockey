@@ -11,6 +11,10 @@ class Statistics{
     public $penalty;
     public $tore;
     public $gegentore;
+    public $spielerinnen;
+    public $spieler;
+    public $kader;
+    public $schiedsrichter;
     
     function __construct() {
         $this->turniere = $this->get_aktuelle_turniere();
@@ -21,6 +25,10 @@ class Statistics{
         $this->penalty = $this->get_aktuelle_penalty();
         $this->tore = $this->get_aktuelle_tore();
         $this->gegentore = $this->get_aktuelle_gegentore();
+        $this->spielerinnen = $this->get_aktuelle_spielerinnen();
+        $this->spieler = $this->get_aktuelle_spieler();
+        $this->kader = $this->get_aktuelle_kader();
+        $this->schiedsrichter = $this->get_aktuelle_schiedsrichter();
     }
 
     function get_aktuelle_turniere() {
@@ -156,6 +164,60 @@ class Statistics{
         $result = mysqli_fetch_assoc($result);
 
         return $result['gegentore'];
+    }
+
+    function get_aktuelle_spielerinnen() {
+        $sql = "
+        SELECT COUNT(*) AS spielerinnen 
+        FROM `spieler` 
+        WHERE letzte_saison = " . $this->saison . " 
+        AND geschlecht = 'w' 
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+
+        return $result['spielerinnen'];
+    }
+
+    function get_aktuelle_spieler() {
+        $sql = "
+        SELECT COUNT(*) AS spieler 
+        FROM `spieler` 
+        WHERE letzte_saison = " . $this->saison . " 
+        AND geschlecht = 'm' 
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+
+        return $result['spieler'];
+    }
+
+    function get_aktuelle_kader() {
+        $sql = "
+        SELECT COUNT(*) AS kader
+        FROM `spieler`
+        WHERE letzte_saison = " . $this->saison . "
+        GROUP BY team_id
+        ORDER BY 1 DESC
+        LIMIT 1
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+
+        return $result['kader'];
+    }
+
+    function get_aktuelle_schiedsrichter() {
+        $sql = "
+        SELECT COUNT(*) AS schiedsrichter
+        FROM `spieler` 
+        WHERE schiri = 'Ausbilder/in' 
+        OR schiri >= " . $this->saison . "
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+
+        return $result['schiedsrichter'];
     }
 
 }

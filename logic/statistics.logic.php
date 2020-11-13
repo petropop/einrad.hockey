@@ -10,6 +10,10 @@
     $penalty = number_format($statistics->penalty, 0, ",", ".");
     $tore = number_format($statistics->tore, 0, ",", ".");
     $gegentore = number_format($statistics->gegentore, 0, ",", ".");
+    $spielerinnen = number_format($statistics->spielerinnen, 0, ",", ".");
+    $spieler = number_format($statistics->spieler, 0, ",", ".");
+    $kader = number_format($statistics->kader, 0, ",", ".");
+    $schiedsrichter = number_format($statistics->schiedsrichter, 0, ",", ".");
 
     function secondsToTime($seconds) {
         $dtF = new \DateTime('@0');
