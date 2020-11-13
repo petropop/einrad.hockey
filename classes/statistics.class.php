@@ -16,6 +16,10 @@ class Statistics{
     public $kader;
     public $schiedsrichter;
     public $hoechster_sieg;
+    public $spiel_wenigste_tore;
+    public $spiel_meiste_tore;
+    public $torreichstes_unentschieden;
+    public $toraermstes_unentschieden;
     
     function __construct() {
         $this->turniere = $this->get_aktuelle_turniere();
@@ -31,6 +35,10 @@ class Statistics{
         $this->kader = $this->get_aktuelle_kader();
         $this->schiedsrichter = $this->get_aktuelle_schiedsrichter();
         $this->hoechster_sieg=$this->get_hoechster_sieg();
+        $this->spiel_wenigste_tore=$this->get_spiel_wenigste_tore();
+        $this->spiel_meiste_tore=$this->get_spiel_meiste_tore();
+        $this->torreichstes_unentschieden=$this->get_torreichstes_unentschieden();
+        $this->toraermstes_unentschieden=$this->get_toraermstes_unentschieden();
     }
 
     function get_aktuelle_turniere() {
@@ -174,19 +182,12 @@ class Statistics{
         FROM `spieler` 
         WHERE letzte_saison = " . $this->saison . " 
         AND geschlecht = 'w' 
-    function get_hoechster_sieg () {
-        $sql = "
-        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
-        FROM `spiele`
-        WHERE abs(tore_a-tore_b) = (SELECT 
-                              MAX(abs(tore_a-tore_b))
-                              FROM `spiele`)
         ";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
-
         return $result['spielerinnen'];
     }
+
 
     function get_aktuelle_spieler() {
         $sql = "
@@ -197,7 +198,6 @@ class Statistics{
         ";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
-
         return $result['spieler'];
     }
 
@@ -227,6 +227,69 @@ class Statistics{
         $result = mysqli_fetch_assoc($result);
 
         return $result['schiedsrichter'];
+    }
+
+    function get_hoechster_sieg () {
+        $sql = "
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
+        FROM `spiele`
+        WHERE abs(tore_a-tore_b) = (SELECT 
+                              MAX(abs(tore_a-tore_b))
+                              FROM `spiele`)
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+
+        return $result;
+    }
+
+    function get_spiel_wenigste_tore () {
+        $sql = "
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
+        FROM `spiele`
+        WHERE abs(tore_a+tore_b) = (SELECT 
+                              MIN(abs(tore_a+tore_b))
+                              FROM `spiele`)
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+        return $result;
+    }
+
+    function get_spiel_meiste_tore () {
+        $sql = "
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
+        FROM `spiele`
+        WHERE abs(tore_a+tore_b) = (SELECT 
+                              MAX(abs(tore_a+tore_b))
+                              FROM `spiele`)
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+        return $result;
+    }
+    function get_torreichstes_unentschieden() {
+        $sql = "
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
+        FROM `spiele`
+        WHERE tore_a=tore_b AND abs(tore_a+tore_b) = (SELECT 
+                              MAX(abs(tore_a+tore_b))
+                              FROM `spiele` WHERE tore_a=tore_b)
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+        return $result;
+    }
+    function get_toraermstes_unentschieden() {
+        $sql = "
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
+        FROM `spiele`
+        WHERE tore_a=tore_b AND abs(tore_a+tore_b) = (SELECT 
+                              MIN(abs(tore_a+tore_b))
+                              FROM `spiele` WHERE tore_a=tore_b)
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
         return $result;
     }
 
