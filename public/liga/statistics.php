@@ -71,6 +71,12 @@ include '../../templates/header.tmp.php';
             <p class="w3-center w3-xxxlarge"><?=$gegentore?></p>
         </div>
     </div>
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-secondary">
+            <p class="w3-center w3-large">Höchster Sieg</p>
+            <p class="w3-center w3-xlarge"><?=$hoechster_sieg_team_a?> - <?=$hoechster_sieg_team_b?><br><?=$hoechster_sieg_tore_a?> - <?=$hoechster_sieg_tore_b?></p>
+        </div>
+    </div>
 </div>
 
 <div class="w3-row">

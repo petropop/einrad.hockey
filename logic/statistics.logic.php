@@ -14,6 +14,10 @@
     $spieler = number_format($statistics->spieler, 0, ",", ".");
     $kader = number_format($statistics->kader, 0, ",", ".");
     $schiedsrichter = number_format($statistics->schiedsrichter, 0, ",", ".");
+    $hoechster_sieg_team_a = $statistics->hoechster_sieg["team_a"];
+    $hoechster_sieg_team_b = $statistics->hoechster_sieg["team_b"];
+    $hoechster_sieg_tore_a = number_format($statistics->hoechster_sieg["tore_a"], 0, ",", ".");
+    $hoechster_sieg_tore_b = number_format($statistics->hoechster_sieg["tore_b"], 0, ",", ".");
 
     function secondsToTime($seconds) {
         $dtF = new \DateTime('@0');

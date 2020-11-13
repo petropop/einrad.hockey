@@ -15,6 +15,7 @@ class Statistics{
     public $spieler;
     public $kader;
     public $schiedsrichter;
+    public $hoechster_sieg;
     
     function __construct() {
         $this->turniere = $this->get_aktuelle_turniere();
@@ -29,6 +30,7 @@ class Statistics{
         $this->spieler = $this->get_aktuelle_spieler();
         $this->kader = $this->get_aktuelle_kader();
         $this->schiedsrichter = $this->get_aktuelle_schiedsrichter();
+        $this->hoechster_sieg=$this->get_hoechster_sieg();
     }
 
     function get_aktuelle_turniere() {
@@ -172,6 +174,13 @@ class Statistics{
         FROM `spieler` 
         WHERE letzte_saison = " . $this->saison . " 
         AND geschlecht = 'w' 
+    function get_hoechster_sieg () {
+        $sql = "
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
+        FROM `spiele`
+        WHERE abs(tore_a-tore_b) = (SELECT 
+                              MAX(abs(tore_a-tore_b))
+                              FROM `spiele`)
         ";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
@@ -218,6 +227,7 @@ class Statistics{
         $result = mysqli_fetch_assoc($result);
 
         return $result['schiedsrichter'];
+        return $result;
     }
 
 }
