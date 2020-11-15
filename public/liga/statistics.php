@@ -106,6 +106,14 @@ include '../../templates/header.tmp.php';
             </div>
     </div>
 </div>
+<div class="w3-row">  
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-secondary">
+            <p class="w3-center w3-large">Einzelsiege in Folge saisonübergreifend</p>
+            <p class="w3-center w3-xlarge"><?=$seriensieger["team_name"]?><br><?=$seriensieger["max_siege"]?> Siege</p>
+            </div>
+    </div>
+</div>
 
 
 <div class="w3-row">

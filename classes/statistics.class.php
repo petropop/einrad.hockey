@@ -20,6 +20,7 @@ class Statistics{
     public $spiel_meiste_tore;
     public $torreichstes_unentschieden;
     public $toraermstes_unentschieden;
+    public $seriensieger;
     
     function __construct() {
         $this->turniere = $this->get_aktuelle_turniere();
@@ -39,6 +40,7 @@ class Statistics{
         $this->spiel_meiste_tore=$this->get_spiel_meiste_tore();
         $this->torreichstes_unentschieden=$this->get_torreichstes_unentschieden();
         $this->toraermstes_unentschieden=$this->get_toraermstes_unentschieden();
+        $this->seriensieger=$this->get_seriensieger();
     }
 
     function get_aktuelle_turniere() {
@@ -292,5 +294,49 @@ class Statistics{
         $result = mysqli_fetch_assoc($result);
         return $result;
     }
-
+    function get_seriensieger() {
+        $sql0 = "
+        SELECT `team_id`, `teamname` 
+        FROM `teams_liga`
+        ";
+        $team_liste = db::readdb($sql0);
+        $team_liste = mysqli_fetch_all($team_liste);
+        $max_siege=0;
+        $team_name='';
+        foreach ($team_liste as $value)
+        {
+            //MJC Trier - Die Gladiatoren
+            //SET @count=0;
+            //SELECT MAX(@count:=((tore_a>tore_b)*(team_id_a=155)+(tore_b>tore_a)*(team_id_b=155))*(@count+((tore_a>tore_b)*(team_id_a=155)+(tore_b>tore_a)*(team_id_b=155)))) 
+            //FROM `spiele` sp 
+            //WHERE team_id_a=155 OR team_id_b=155
+            //ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id), `spiel_id`
+            
+            //Anzahl Seriensiege pro Team
+            $sql1 = "SET @count:=0;";
+            $sql2 = "
+            SELECT MAX(@count:=((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0]))*(@count+((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0])))) 
+            FROM `spiele` sp 
+            WHERE team_id_a=$value[0] OR team_id_b=$value[0]
+            ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id), `spiel_id`
+            ";
+            $count = db::readdb($sql1);
+            $result_per_team = db::readdb($sql2);
+            $result_per_team = mysqli_fetch_assoc($result_per_team);
+            if (array_values($result_per_team)[0]> $max_siege)
+            {
+                $max_siege = array_values($result_per_team)[0];
+                $team_name = $value[1];
+            }
+        }
+        $result = array(
+            "team_name" => $team_name,
+            "max_siege" => $max_siege
+        );
+        return $result;
+    }
+    //seriensieger
+    //SELECT * FROM `spiele` sp ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id)
+    //siegesserie für id=837
+    //SELECT (tore_a>tore_b)*(team_id_a=837)+(tore_b>tore_a)*(team_id_b=837) FROM `spiele` sp WHERE team_id_a=837 OR team_id_b=837 ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id), `spiel_id`
 }

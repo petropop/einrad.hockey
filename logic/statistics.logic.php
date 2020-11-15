@@ -44,6 +44,10 @@
         "tore_a"=>number_format($statistics->toraermstes_unentschieden["tore_a"], 0, ",", "."),
         "tore_b"=>number_format($statistics->toraermstes_unentschieden["tore_b"], 0, ",", ".")
     );
+    $seriensieger =  array(
+        "team_name"=>$statistics->seriensieger["team_name"],
+        "max_siege"=>$statistics->seriensieger["max_siege"]
+    );
 
     function secondsToTime($seconds) {
         $dtF = new \DateTime('@0');

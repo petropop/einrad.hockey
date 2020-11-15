@@ -80,6 +80,44 @@ class db {
     return self::$link->query($sql);
   }
 
+  //funktion zum lesen der sql datenbank mit mehreren Queries auf einmal (z.B. bei SET variablen nötig). Sie gibt ein mysqli-objekt zurück
+  //dieses mysqli-objekt muss immer in assoziatives array umgewandelt werden
+  public static function readdb_multi_query($sql)
+  {
+    if (mysqli_connect_errno()) {
+      die('<h2>Verbindung zum MySQL Server fehlgeschlagen: '.mysqli_connect_error().'<br><br>Wende dich bitte an <span style="color:red;">' . Config::TECHNIKMAIL . '</span> wenn dieser Fehler auch in den nächsten Stunden noch besteht.</h2>');
+    }
+    //QUELLE:https://www.php.net/manual/de/mysqli.multi-query.php
+    $index = 0;
+    $result=array();
+    if (self::$link->multi_query($sql)) {
+      print_r("A: $index \n");
+      do {
+          /* store first result set */
+          if ($res = self::$link->store_result()) {
+            while ($row =$res->fetch_assoc()){
+              $result[$index]=$row;
+              print_r("b:");
+              print_r($row);
+            }
+            $res->free();
+            print_r("B: $index \n");
+            print_r($res);
+            
+        }
+        /* print divider */
+        if (self::$link->more_results()) {
+          print_r("C $index\n");
+          $index++;
+        }
+        print_r("D $index\n");
+      } while(self::$link->next_result());
+    }
+    print_r("Result:  ");
+    print_r($result);
+    return $result;
+  }
+
   //funktion zum schreiben in die sql datenbank
   public static function writedb($sql)
   {
