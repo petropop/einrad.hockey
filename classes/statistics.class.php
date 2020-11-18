@@ -231,13 +231,22 @@ class Statistics{
         return $result['schiedsrichter'];
     }
 
+    //Bei den nachfolgend Statistiken zählt das erste Ergebnis. Dabei zählt zuerst das Datum, dann die spiel_id und schließlich die turnier_id. 
+    //Nachfolger müssen das Ergebnis daher immer übertreffen. 
     function get_hoechster_sieg () {
         $sql = "
-        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
-        FROM `spiele`
+        SELECT 
+        (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
+        (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b, 
+        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        sp.tore_a, 
+        sp.tore_b
+        FROM `spiele` sp
         WHERE abs(tore_a-tore_b) = (SELECT 
                               MAX(abs(tore_a-tore_b))
                               FROM `spiele`)
+        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+        LIMIT 1
         ";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
@@ -247,11 +256,17 @@ class Statistics{
 
     function get_spiel_wenigste_tore () {
         $sql = "
-        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
-        FROM `spiele`
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
+        (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b,
+        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        sp.tore_a, 
+        sp.tore_b
+        FROM `spiele` sp
         WHERE abs(tore_a+tore_b) = (SELECT 
                               MIN(abs(tore_a+tore_b))
                               FROM `spiele`)
+        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+        LIMIT 1
         ";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
@@ -260,11 +275,17 @@ class Statistics{
 
     function get_spiel_meiste_tore () {
         $sql = "
-        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
-        FROM `spiele`
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
+        (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b,
+        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        sp.tore_a, 
+        sp.tore_b
+        FROM `spiele` sp
         WHERE abs(tore_a+tore_b) = (SELECT 
                               MAX(abs(tore_a+tore_b))
                               FROM `spiele`)
+        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+        LIMIT 1
         ";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
@@ -272,11 +293,17 @@ class Statistics{
     }
     function get_torreichstes_unentschieden() {
         $sql = "
-        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
-        FROM `spiele`
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
+        (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b,
+        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        sp.tore_a, 
+        sp.tore_b
+        FROM `spiele` sp
         WHERE tore_a=tore_b AND abs(tore_a+tore_b) = (SELECT 
                               MAX(abs(tore_a+tore_b))
                               FROM `spiele` WHERE tore_a=tore_b)
+        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+        LIMIT 1
         ";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
@@ -284,17 +311,24 @@ class Statistics{
     }
     function get_toraermstes_unentschieden() {
         $sql = "
-        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_a) as team_a, (SELECT teamname FROM `teams_liga` WHERE team_id = team_id_b) as team_b, tore_a, tore_b
-        FROM `spiele`
+        SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
+        (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b,
+        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        sp.tore_a, 
+        sp.tore_b
+        FROM `spiele` sp
         WHERE tore_a=tore_b AND abs(tore_a+tore_b) = (SELECT 
                               MIN(abs(tore_a+tore_b))
                               FROM `spiele` WHERE tore_a=tore_b)
+        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+        LIMIT 1
         ";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
         return $result;
     }
     function get_seriensieger() {
+        //TODO: Es fehlt eine sinnvolle Sortierung im Falle eines Gleichstandes.
         $sql0 = "
         SELECT `team_id`, `teamname` 
         FROM `teams_liga`
@@ -312,15 +346,17 @@ class Statistics{
             //WHERE team_id_a=155 OR team_id_b=155
             //ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id), `spiel_id`
             
+            //Einradfüchse 2 team_id=421
+
             //Anzahl Seriensiege pro Team
             $sql1 = "SET @count:=0;";
             $sql2 = "
-            SELECT MAX(@count:=((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0]))*(@count+((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0])))) 
+            SELECT MAX(@count:=((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0]))*(@count+((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0]))))
             FROM `spiele` sp 
             WHERE team_id_a=$value[0] OR team_id_b=$value[0]
             ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id), `spiel_id`
             ";
-            $count = db::readdb($sql1);
+            db::readdb($sql1);
             $result_per_team = db::readdb($sql2);
             $result_per_team = mysqli_fetch_assoc($result_per_team);
             if (array_values($result_per_team)[0]> $max_siege)

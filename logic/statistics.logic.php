@@ -17,30 +17,35 @@
     $hoechster_sieg = array(
         "team_a"=>$statistics->hoechster_sieg["team_a"],
         "team_b"=>$statistics->hoechster_sieg["team_b"],
+        "datum"=>$statistics->hoechster_sieg["datum"],
         "tore_a"=>number_format($statistics->hoechster_sieg["tore_a"], 0, ",", "."),
-        "tore_b"=>number_format($statistics->hoechster_sieg["tore_b"], 0, ",", ".")
+        "tore_b"=>number_format($statistics->hoechster_sieg["tore_b"], 0, ",", "."),
     );
     $spiel_wenigste_tore =  array(
         "team_a"=>$statistics->spiel_wenigste_tore["team_a"],
         "team_b"=>$statistics->spiel_wenigste_tore["team_b"],
+        "datum"=>$statistics->spiel_wenigste_tore["datum"],
         "tore_a"=>number_format($statistics->spiel_wenigste_tore["tore_a"], 0, ",", "."),
         "tore_b"=>number_format($statistics->spiel_wenigste_tore["tore_b"], 0, ",", ".")
     );
     $spiel_meiste_tore =  array(
         "team_a"=>$statistics->spiel_meiste_tore["team_a"],
         "team_b"=>$statistics->spiel_meiste_tore["team_b"],
+        "datum"=>$statistics->spiel_meiste_tore["datum"],
         "tore_a"=>number_format($statistics->spiel_meiste_tore["tore_a"], 0, ",", "."),
         "tore_b"=>number_format($statistics->spiel_meiste_tore["tore_b"], 0, ",", ".")
     );
     $torreichstes_unentschieden =  array(
         "team_a"=>$statistics->torreichstes_unentschieden["team_a"],
         "team_b"=>$statistics->torreichstes_unentschieden["team_b"],
+        "datum"=>$statistics->torreichstes_unentschieden["datum"],
         "tore_a"=>number_format($statistics->torreichstes_unentschieden["tore_a"], 0, ",", "."),
         "tore_b"=>number_format($statistics->torreichstes_unentschieden["tore_b"], 0, ",", ".")
     );
     $toraermstes_unentschieden =  array(
         "team_a"=>$statistics->toraermstes_unentschieden["team_a"],
         "team_b"=>$statistics->toraermstes_unentschieden["team_b"],
+        "datum"=>$statistics->toraermstes_unentschieden["datum"],
         "tore_a"=>number_format($statistics->toraermstes_unentschieden["tore_a"], 0, ",", "."),
         "tore_b"=>number_format($statistics->toraermstes_unentschieden["tore_b"], 0, ",", ".")
     );

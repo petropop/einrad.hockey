@@ -77,19 +77,25 @@ include '../../templates/header.tmp.php';
         <div class="w3-panel w3-card-4 w3-primary">
             <p class="w3-center w3-large">Höchster Sieg saisonübergreifend</p>
             <p class="w3-center w3-xlarge"><?=$hoechster_sieg["team_a"]?> - <?=$hoechster_sieg["team_b"]?><br><?=$hoechster_sieg["tore_a"]?> - <?=$hoechster_sieg["tore_b"]?></p>
+            <p class="w3-center w3-large">am</p>
+            <p class="w3-center w3-xlarge"><?=$hoechster_sieg["datum"]?></p>
             </div>
     </div>
     <div class="w3-container w3-third">
         <div class="w3-panel w3-card-4 w3-secondary">
             <p class="w3-center w3-large">Torärmstes Spiel saisonübergreifend</p>
             <p class="w3-center w3-xlarge"><?=$spiel_wenigste_tore["team_a"]?> - <?=$spiel_wenigste_tore["team_b"]?><br><?=$spiel_wenigste_tore["tore_a"]?> - <?=$spiel_wenigste_tore["tore_b"]?></p>
+            <p class="w3-center w3-large">am</p>
+            <p class="w3-center w3-xlarge"><?=$spiel_wenigste_tore["datum"]?></p>
             </div>
     </div>
     <div class="w3-container w3-third">
         <div class="w3-panel w3-card-4 w3-tertiary">
             <p class="w3-center w3-large">Torreichstes Spiel saisonübergreifend</p>
             <p class="w3-center w3-xlarge"><?=$spiel_meiste_tore["team_a"]?> - <?=$spiel_meiste_tore["team_b"]?><br><?=$spiel_meiste_tore["tore_a"]?> - <?=$spiel_meiste_tore["tore_b"]?></p>
-            </div>
+            <p class="w3-center w3-large">am</p>
+            <p class="w3-center w3-xlarge"><?=$spiel_meiste_tore["datum"]?></p>
+        </div>
     </div>
 </div>
 <div class="w3-row">  
@@ -97,13 +103,17 @@ include '../../templates/header.tmp.php';
         <div class="w3-panel w3-card-4 w3-tertiary">
             <p class="w3-center w3-large">Torreichstes unentschieden saisonübergreifend</p>
             <p class="w3-center w3-xlarge"><?=$torreichstes_unentschieden["team_a"]?> - <?=$torreichstes_unentschieden["team_b"]?><br><?=$torreichstes_unentschieden["tore_a"]?> - <?=$torreichstes_unentschieden["tore_b"]?></p>
-            </div>
+            <p class="w3-center w3-large">am</p>
+            <p class="w3-center w3-xlarge"><?=$torreichstes_unentschieden["datum"]?></p>       
+        </div>
     </div>
     <div class="w3-container w3-third">
         <div class="w3-panel w3-card-4 w3-primary">
             <p class="w3-center w3-large">Torärmstes unentschieden saisonübergreifend</p>
             <p class="w3-center w3-xlarge"><?=$toraermstes_unentschieden["team_a"]?> - <?=$toraermstes_unentschieden["team_b"]?><br><?=$toraermstes_unentschieden["tore_a"]?> - <?=$toraermstes_unentschieden["tore_b"]?></p>
-            </div>
+            <p class="w3-center w3-large">am</p>
+            <p class="w3-center w3-xlarge"><?=$toraermstes_unentschieden["datum"]?></p>       
+        </div>
     </div>
 </div>
 <div class="w3-row">  
