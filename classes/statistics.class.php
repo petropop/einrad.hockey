@@ -89,7 +89,7 @@ class Statistics{
         SELECT (SUM(tore_a) + SUM(tore_b)) AS tore 
         FROM `spiele` sp, turniere_liga tur 
         WHERE sp.turnier_id = tur.turnier_id 
-        AND tur.saison = 26
+        AND tur.saison = " . $this->saison . "
         AND tur.phase = 'ergebnis'
         ";
         $result = db::readdb($sql);
@@ -143,7 +143,7 @@ class Statistics{
 
     function get_aktuelle_tore () {
         $sql = "
-        SELECT SUM(sp.tore_a) AS tore 
+        SELECT SUM(sp.tore_a) AS tore,  te.teamname FROM `teams_liga` te 
         FROM `teams_liga` te, `turniere_liga` tur, (SELECT `turnier_id`, `team_id_a`, `team_id_b`, `tore_a`, `tore_b` FROM `spiele` UNION SELECT `turnier_id`, `team_id_b`, `team_id_a`, `tore_b`, `tore_a` FROM `spiele`) AS sp 
         WHERE sp.turnier_id = tur.turnier_id AND sp.team_id_a = te.team_id 
         AND tur.saison = " . $this->saison . " 
@@ -165,7 +165,7 @@ class Statistics{
         FROM `teams_liga` te, `turniere_liga` tur, (SELECT `turnier_id`, `team_id_a`, `team_id_b`, `tore_a`, `tore_b` FROM `spiele` UNION SELECT `turnier_id`, `team_id_b`, `team_id_a`, `tore_b`, `tore_a` FROM `spiele`) AS sp
         WHERE sp.turnier_id = tur.turnier_id
         AND sp.team_id_a = te.team_id
-        AND tur.saison = 26
+        AND tur.saison = " . $this->saison . "
         AND tur.phase = 'ergebnis'
         AND te.ligateam = 'Ja'
         GROUP BY sp.team_id_a
@@ -238,14 +238,16 @@ class Statistics{
         SELECT 
         (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
         (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b, 
-        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        tur.datum,
         sp.tore_a, 
         sp.tore_b
-        FROM `spiele` sp
-        WHERE abs(tore_a-tore_b) = (SELECT 
+        FROM `spiele` sp, `turniere_liga` tur
+        WHERE sp.turnier_id=tur.turnier_id 
+            AND abs(tore_a-tore_b) = (SELECT 
                               MAX(abs(tore_a-tore_b))
                               FROM `spiele`)
-        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+            AND tur.phase = 'ergebnis'
+        ORDER BY tur.datum, sp.spiel_id, sp.turnier_id
         LIMIT 1
         ";
         $result = db::readdb($sql);
@@ -258,14 +260,16 @@ class Statistics{
         $sql = "
         SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
         (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b,
-        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        tur.datum,
         sp.tore_a, 
         sp.tore_b
-        FROM `spiele` sp
-        WHERE abs(tore_a+tore_b) = (SELECT 
+        FROM `spiele` sp, `turniere_liga` tur
+        WHERE sp.turnier_id=tur.turnier_id 
+            AND abs(tore_a+tore_b) = (SELECT 
                               MIN(abs(tore_a+tore_b))
                               FROM `spiele`)
-        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+            AND tur.phase = 'ergebnis'
+        ORDER BY tur.datum, sp.spiel_id, sp.turnier_id
         LIMIT 1
         ";
         $result = db::readdb($sql);
@@ -277,14 +281,16 @@ class Statistics{
         $sql = "
         SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
         (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b,
-        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        tur.datum,
         sp.tore_a, 
         sp.tore_b
-        FROM `spiele` sp
-        WHERE abs(tore_a+tore_b) = (SELECT 
+        FROM `spiele` sp, `turniere_liga` tur
+        WHERE sp.turnier_id=tur.turnier_id 
+            AND abs(tore_a+tore_b) = (SELECT 
                               MAX(abs(tore_a+tore_b))
                               FROM `spiele`)
-        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+            AND tur.phase = 'ergebnis'
+        ORDER BY tur.datum, sp.spiel_id, sp.turnier_id
         LIMIT 1
         ";
         $result = db::readdb($sql);
@@ -295,14 +301,18 @@ class Statistics{
         $sql = "
         SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
         (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b,
-        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        tur.datum,
+        tur.saison,
         sp.tore_a, 
         sp.tore_b
-        FROM `spiele` sp
-        WHERE tore_a=tore_b AND abs(tore_a+tore_b) = (SELECT 
+        FROM `spiele` sp, `turniere_liga` tur
+        WHERE sp.turnier_id=tur.turnier_id 
+            AND tore_a=tore_b 
+            AND abs(tore_a+tore_b) = (SELECT 
                               MAX(abs(tore_a+tore_b))
                               FROM `spiele` WHERE tore_a=tore_b)
-        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+            AND tur.phase = 'ergebnis'
+        ORDER BY tur.datum, sp.spiel_id, sp.turnier_id
         LIMIT 1
         ";
         $result = db::readdb($sql);
@@ -313,16 +323,21 @@ class Statistics{
         $sql = "
         SELECT (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_a) as team_a, 
         (SELECT teamname FROM `teams_liga` WHERE team_id = sp.team_id_b) as team_b,
-        (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id) as datum,
+        tur.datum,
+        tur.saison,
         sp.tore_a, 
         sp.tore_b
-        FROM `spiele` sp
-        WHERE tore_a=tore_b AND abs(tore_a+tore_b) = (SELECT 
+        FROM `spiele` sp, `turniere_liga` tur
+        WHERE sp.turnier_id=tur.turnier_id 
+            AND tore_a=tore_b 
+            AND abs(tore_a+tore_b) = (SELECT 
                               MIN(abs(tore_a+tore_b))
                               FROM `spiele` WHERE tore_a=tore_b)
-        ORDER BY (SELECT datum FROM `turniere_liga` WHERE turnier_id = sp.turnier_id), sp.spiel_id, sp.turnier_id
+            AND tur.phase = 'ergebnis'
+        ORDER BY tur.datum, sp.spiel_id, sp.turnier_id
         LIMIT 1
         ";
+        //
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
         return $result;
@@ -352,9 +367,10 @@ class Statistics{
             $sql1 = "SET @count:=0;";
             $sql2 = "
             SELECT MAX(@count:=((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0]))*(@count+((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0]))))
-            FROM `spiele` sp 
-            WHERE team_id_a=$value[0] OR team_id_b=$value[0]
-            ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id), `spiel_id`
+            FROM `spiele` sp, `turniere_liga` tur 
+            WHERE tur.turnier_id=sp.turnier_id
+                AND (team_id_a=$value[0] OR team_id_b=$value[0])
+            ORDER BY tur.datum, sp.spiel_id
             ";
             db::readdb($sql1);
             $result_per_team = db::readdb($sql2);
