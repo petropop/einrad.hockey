@@ -53,6 +53,27 @@
         "team_name"=>$statistics->seriensieger["team_name"],
         "max_siege"=>$statistics->seriensieger["max_siege"]
     );
+    $max_entf_team =  array(
+        "entfernung"=>number_format($statistics->max_entf_team["entfernung"], 1, ",", "."),
+        "ort_a"=>$statistics->max_entf_team["ort_a"],
+        "ort_b"=>$statistics->max_entf_team["ort_b"],
+    );
+    $max_anreise =  array(
+        "entfernung"=>number_format($statistics->max_anreise["entfernung"], 1, ",", "."),
+        "teamname"=>$statistics->max_anreise["teamname"],
+        "ort"=>$statistics->max_anreise["ort"],
+        "turnier_ort"=>$statistics->max_anreise["turnier_ort"],
+    );
+    $turnier_max_anreise =  array(
+        "sum_entfernung"=>number_format($statistics->turnier_max_anreise["sum_entfernung"], 1, ",", "."),
+        "turnier_ort"=>$statistics->turnier_max_anreise["turnier_ort"],
+        "datum"=>$statistics->turnier_max_anreise["datum"],
+    );
+    $turnier_min_anreise =  array(
+        "sum_entfernung"=>number_format($statistics->turnier_min_anreise["sum_entfernung"], 1, ",", "."),
+        "turnier_ort"=>$statistics->turnier_min_anreise["turnier_ort"],
+        "datum"=>$statistics->turnier_min_anreise["datum"],
+    );
 
     function secondsToTime($seconds) {
         $dtF = new \DateTime('@0');

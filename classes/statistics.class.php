@@ -21,7 +21,11 @@ class Statistics{
     public $torreichstes_unentschieden;
     public $toraermstes_unentschieden;
     public $seriensieger;
-    
+    public $max_entf_team;
+    public $max_anreise;
+    public $turnier_max_anreise;
+    public $turnier_min_anreise;
+
     function __construct() {
         $this->turniere = $this->get_aktuelle_turniere();
         $this->spiele = $this->get_aktuelle_spiele();
@@ -41,6 +45,10 @@ class Statistics{
         $this->torreichstes_unentschieden=$this->get_torreichstes_unentschieden();
         $this->toraermstes_unentschieden=$this->get_toraermstes_unentschieden();
         $this->seriensieger=$this->get_seriensieger();
+        $this->max_entf_team=$this->get_max_entfernung_aktiver_ligateams();
+        $this->max_anreise=$this->get_max_anreise();
+        $this->turnier_max_anreise=$this->get_turnier_max_anreise();
+        $this->turnier_min_anreise=$this->get_turnier_min_anreise();
     }
 
     function get_aktuelle_turniere() {
@@ -143,7 +151,7 @@ class Statistics{
 
     function get_aktuelle_tore () {
         $sql = "
-        SELECT SUM(sp.tore_a) AS tore,  te.teamname FROM `teams_liga` te 
+        SELECT SUM(sp.tore_a) AS tore,  te.teamname
         FROM `teams_liga` te, `turniere_liga` tur, (SELECT `turnier_id`, `team_id_a`, `team_id_b`, `tore_a`, `tore_b` FROM `spiele` UNION SELECT `turnier_id`, `team_id_b`, `team_id_a`, `tore_b`, `tore_a` FROM `spiele`) AS sp 
         WHERE sp.turnier_id = tur.turnier_id AND sp.team_id_a = te.team_id 
         AND tur.saison = " . $this->saison . " 
@@ -391,4 +399,77 @@ class Statistics{
     //SELECT * FROM `spiele` sp ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id)
     //siegesserie für id=837
     //SELECT (tore_a>tore_b)*(team_id_a=837)+(tore_b>tore_a)*(team_id_b=837) FROM `spiele` sp WHERE team_id_a=837 OR team_id_b=837 ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id), `spiel_id`
+
+    //entfernungen
+    function get_max_entfernung_aktiver_ligateams()
+    {
+        $sql = "SELECT entf.entfernung,
+        (SELECT ort FROM `teams_details` td WHERE td.team_id = entf.team_id_a) as ort_a,
+        (SELECT ort FROM `teams_details` td WHERE td.team_id = entf.team_id_b) as ort_b
+        FROM `entfernungen` entf 
+        WHERE entf.entfernung = (SELECT MAX(entfernung)FROM `entfernungen`)
+        AND (SELECT ort FROM `teams_details` td WHERE td.team_id = entf.team_id_a) <
+        (SELECT ort FROM `teams_details` td WHERE td.team_id = entf.team_id_b)
+        AND (SELECT aktiv FROM `teams_liga`tl WHERE tl.team_id=entf.team_id_a) = 'ja'
+        AND (SELECT aktiv FROM `teams_liga`tl WHERE tl.team_id=entf.team_id_b) = 'ja'
+        AND (SELECT ligateam FROM `teams_liga`tl WHERE tl.team_id=entf.team_id_a) = 'ja'
+        AND (SELECT ligateam FROM `teams_liga`tl WHERE tl.team_id=entf.team_id_b) = 'ja'
+        ORDER BY entf.team_id_a, entf.team_id_b
+        LIMIT 1";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+        return $result;
+    }
+    function get_max_anreise()
+    {
+        $sql = "SELECT (SELECT tl.teamname FROM `teams_liga`tl WHERE tl.team_id = tur_erg.team_id)as teamname,
+        (SELECT td.ort FROM `teams_details`td WHERE td.team_id = tur_erg.team_id)as ort, 
+        (SELECT tl.teamname FROM `teams_liga`tl WHERE tl.team_id = tur.ausrichter)as ausrichter_name,
+        (SELECT td.ort FROM `teams_details`td WHERE td.team_id = tur.ausrichter)as turnier_ort, 
+        entf.entfernung
+        FROM `turniere_ergebnisse` tur_erg, `turniere_liga` tur, `entfernungen` entf, `teams_liga` tl_ausrichter
+        WHERE tur_erg.turnier_id = tur.turnier_id
+        AND entf.team_id_a = tur_erg.team_id
+        AND entf.team_id_b = tur.ausrichter
+        AND tl_ausrichter.team_id = tur.ausrichter
+        ORDER BY entf.entfernung DESC
+        LIMIT 1";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+        return $result;
+    }
+    function get_turnier_max_anreise()
+    {
+        $sql = "SELECT tur.datum,
+        (SELECT td.ort FROM `teams_details`td WHERE td.team_id = tur.ausrichter)as turnier_ort, 
+        SUM(entf.entfernung) as sum_entfernung
+        FROM `turniere_ergebnisse` tur_erg, `turniere_liga` tur, `entfernungen` entf, `teams_liga` tl_ausrichter
+        WHERE tur_erg.turnier_id = tur.turnier_id
+        AND entf.team_id_a = tur_erg.team_id
+        AND entf.team_id_b = tur.ausrichter
+        AND tl_ausrichter.team_id = tur.ausrichter
+        GROUP BY tur.turnier_id
+        ORDER BY sum_entfernung DESC
+        LIMIT 1";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+        return $result;
+    }
+    function get_turnier_min_anreise()
+    {
+        $sql = "SELECT tur.datum,
+        (SELECT td.ort FROM `teams_details`td WHERE td.team_id = tur.ausrichter)as turnier_ort, 
+        SUM(entf.entfernung) as sum_entfernung
+        FROM `turniere_ergebnisse` tur_erg, `turniere_liga` tur, `entfernungen` entf, `teams_liga` tl_ausrichter
+        WHERE tur_erg.turnier_id = tur.turnier_id
+        AND entf.team_id_a = tur_erg.team_id
+        AND entf.team_id_b = tur.ausrichter
+        AND tl_ausrichter.team_id = tur.ausrichter
+        GROUP BY tur.turnier_id
+        ORDER BY sum_entfernung
+        LIMIT 1";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+        return $result;
+    }
 }
