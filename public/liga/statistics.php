@@ -120,9 +120,22 @@ include '../../templates/header.tmp.php';
     <div class="w3-container w3-third">
         <div class="w3-panel w3-card-4 w3-secondary">
             <p class="w3-center w3-large">Einzelsiege in Folge saisonübergreifend</p>
-            <p class="w3-center w3-xlarge"><i><?=$seriensieger["team_name"]?></i><br><?=$seriensieger["max_siege"]?> Siege</p>
+            <p class="w3-center w3-xlarge"><i><?=$seriensieger["team_name"]?></i></p>
+            <p class="w3-center w3-xlarge"><?=$seriensieger["max_siege"]?> Siege</p>
+            <p class="w3-center w3-large">letzter Sieg am</p>
+            <p class="w3-center w3-xlarge"><?=$seriensieger["datum"]?></p>
         </div>
     </div>
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-tertiary">
+            <p class="w3-center w3-large">Turniersiege in Folge saisonübergreifend</p>
+            <p class="w3-center w3-xlarge"><i><?=$seriensieger_turnier["team_name"]?></i><br><?=$seriensieger_turnier["max_siege"]?> Turniersiege</p>
+            <p class="w3-center w3-large">letzter Turniersieg am</p>
+            <p class="w3-center w3-xlarge"><?=$seriensieger_turnier["datum"]?></p>
+        </div>
+    </div>
+</div>
+<div class="w3-row"> 
     <div class="w3-container w3-third">
         <div class="w3-panel w3-card-4 w3-tertiary">
             <p class="w3-center w3-large">Maximale Entfernung zwischen aktiven Ligateams</p>

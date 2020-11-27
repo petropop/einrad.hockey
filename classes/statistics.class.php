@@ -21,6 +21,7 @@ class Statistics{
     public $torreichstes_unentschieden;
     public $toraermstes_unentschieden;
     public $seriensieger;
+    public $seriensieger_turnier;
     public $max_entf_team;
     public $max_anreise;
     public $turnier_max_anreise;
@@ -45,6 +46,7 @@ class Statistics{
         $this->torreichstes_unentschieden=$this->get_torreichstes_unentschieden();
         $this->toraermstes_unentschieden=$this->get_toraermstes_unentschieden();
         $this->seriensieger=$this->get_seriensieger();
+        $this->seriensieger_turnier=$this->get_seriensieger_turnier();
         $this->max_entf_team=$this->get_max_entfernung_aktiver_ligateams();
         $this->max_anreise=$this->get_max_anreise();
         $this->turnier_max_anreise=$this->get_turnier_max_anreise();
@@ -351,7 +353,6 @@ class Statistics{
         return $result;
     }
     function get_seriensieger() {
-        //TODO: Es fehlt eine sinnvolle Sortierung im Falle eines Gleichstandes.
         $sql0 = "
         SELECT `team_id`, `teamname` 
         FROM `teams_liga`
@@ -359,6 +360,7 @@ class Statistics{
         $team_liste = db::readdb($sql0);
         $team_liste = mysqli_fetch_all($team_liste);
         $max_siege=0;
+        $min_datum = "1994-01-01";
         $team_name='';
         foreach ($team_liste as $value)
         {
@@ -373,8 +375,8 @@ class Statistics{
 
             //Anzahl Seriensiege pro Team
             $sql1 = "SET @count:=0;";
-            $sql2 = "
-            SELECT MAX(@count:=((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0]))*(@count+((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0]))))
+            $sql2 = "SELECT @count:=((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0]))*(@count+((tore_a>tore_b)*(team_id_a=$value[0])+(tore_b>tore_a)*(team_id_b=$value[0])))
+            as siege, tur.datum
             FROM `spiele` sp, `turniere_liga` tur 
             WHERE tur.turnier_id=sp.turnier_id
                 AND (team_id_a=$value[0] OR team_id_b=$value[0])
@@ -382,16 +384,26 @@ class Statistics{
             ";
             db::readdb($sql1);
             $result_per_team = db::readdb($sql2);
-            $result_per_team = mysqli_fetch_assoc($result_per_team);
-            if (array_values($result_per_team)[0]> $max_siege)
+            $result_per_team = mysqli_fetch_all($result_per_team);
+            $max_siege_team = 0;
+            $datum_team = "1994-01-01";
+            foreach($result_per_team as $res_team)
             {
-                $max_siege = array_values($result_per_team)[0];
+                if ($res_team[0]>$max_siege_team)
+                    $max_siege_team = $res_team[0];
+                    $datum_team = $res_team[1];
+            }
+            if ($max_siege_team> $max_siege or ($max_siege_team = $max_siege and $datum_team < $min_datum))
+            {
+                $max_siege = $max_siege_team;
+                $datum = $datum_team;
                 $team_name = $value[1];
             }
         }
         $result = array(
             "team_name" => $team_name,
-            "max_siege" => $max_siege
+            "max_siege" => $max_siege,
+            "datum" => $datum
         );
         return $result;
     }
@@ -399,7 +411,53 @@ class Statistics{
     //SELECT * FROM `spiele` sp ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id)
     //siegesserie für id=837
     //SELECT (tore_a>tore_b)*(team_id_a=837)+(tore_b>tore_a)*(team_id_b=837) FROM `spiele` sp WHERE team_id_a=837 OR team_id_b=837 ORDER BY (SELECT `datum` from `turniere_liga` tur WHERE tur.turnier_id = sp.turnier_id), `spiel_id`
+    function get_seriensieger_turnier() {
+        $sql0 = "
+        SELECT `team_id`, `teamname` 
+        FROM `teams_liga`
+        ";
+        $team_liste = db::readdb($sql0);
+        $team_liste = mysqli_fetch_all($team_liste);
+        $max_siege=0;
+        $min_datum = "1994-01-01";
+        $team_name='';
+        foreach ($team_liste as $value)
+        {
+            //Einradfüchse 2 team_id=421
 
+            //Anzahl Turniersiege in Serie pro Team
+            $sql1 = "SET @count:=0;";
+            $sql2 = "SELECT (@count:=(tur_erg.platz=1)*(@count+(tur_erg.platz=1)))as siege, datum
+            FROM `turniere_ergebnisse` tur_erg, `turniere_liga` tur
+            WHERE tur_erg.turnier_id = tur.turnier_id
+            AND team_id=$value[0]
+            ORDER BY tur.datum
+            ";
+            db::readdb($sql1);
+            $result_per_team = db::readdb($sql2);
+            $result_per_team = mysqli_fetch_all($result_per_team);
+            $max_siege_team = 0;
+            $datum_team = "1994-01-01";
+            foreach($result_per_team as $res_team)
+            {
+                if ($res_team[0]>$max_siege_team)
+                    $max_siege_team = $res_team[0];
+                    $datum_team = $res_team[1];
+            }
+            if ($max_siege_team> $max_siege or ($max_siege_team = $max_siege and $datum_team < $min_datum))
+            {
+                $max_siege = $max_siege_team;
+                $datum = $datum_team;
+                $team_name = $value[1];
+            }
+        }
+        $result = array(
+            "team_name" => $team_name,
+            "max_siege" => $max_siege,
+            "datum" => $datum
+        );
+        return $result;
+    }
     //entfernungen
     function get_max_entfernung_aktiver_ligateams()
     {
