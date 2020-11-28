@@ -49,6 +49,11 @@
         "tore_a"=>number_format($statistics->toraermstes_unentschieden["tore_a"], 0, ",", "."),
         "tore_b"=>number_format($statistics->toraermstes_unentschieden["tore_b"], 0, ",", ".")
     );
+    $haeufigstes_ergebnis =  array(
+        "tore_a"=>$statistics->haeufigstes_ergebnis["tore_a"],
+        "tore_b"=>$statistics->haeufigstes_ergebnis["tore_b"],
+        "anzahl"=>$statistics->haeufigstes_ergebnis["anzahl"]
+    );
     $seriensieger =  array(
         "team_name"=>$statistics->seriensieger["team_name"],
         "max_siege"=>$statistics->seriensieger["max_siege"],

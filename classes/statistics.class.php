@@ -20,6 +20,7 @@ class Statistics{
     public $spiel_meiste_tore;
     public $torreichstes_unentschieden;
     public $toraermstes_unentschieden;
+    public $haeufigstes_ergebnis;
     public $seriensieger;
     public $seriensieger_turnier;
     public $turniersiege;
@@ -47,6 +48,7 @@ class Statistics{
         $this->spiel_meiste_tore=$this->get_spiel_meiste_tore();
         $this->torreichstes_unentschieden=$this->get_torreichstes_unentschieden();
         $this->toraermstes_unentschieden=$this->get_toraermstes_unentschieden();
+        $this->haeufigstes_ergebnis=$this->get_haeufigstes_ergebnis();
         $this->seriensieger=$this->get_seriensieger();
         $this->seriensieger_turnier=$this->get_seriensieger_turnier();
         $this->turniersiege=$this->get_turniersiege();
@@ -356,6 +358,22 @@ class Statistics{
         $result = mysqli_fetch_assoc($result);
         return $result;
     }
+
+    function get_haeufigstes_ergebnis() {
+        //TODO: WIP
+        $sql = "SELECT tore_a,tore_b, COUNT(*) as anzahl FROM (SELECT turnier_id, spiel_id, tore_a, tore_b FROM `spiele`
+        WHERE tore_a > tore_b
+        UNION SELECT turnier_id, spiel_id, tore_b, tore_a FROM `spiele`
+        WHERE tore_a <= tore_b) AS erg
+        GROUP BY tore_a, tore_b
+        ORDER BY anzahl DESC
+        LIMIT 1
+        ";       
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+        return $result;
+    }
+
     function get_seriensieger() {
         $sql0 = "
         SELECT `team_id`, `teamname` 

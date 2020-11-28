@@ -115,6 +115,13 @@ include '../../templates/header.tmp.php';
             <p class="w3-center w3-xlarge"><?=$toraermstes_unentschieden["datum"]?></p>       
         </div>
     </div>
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-secondary">
+            <p class="w3-center w3-large">Haeufigstes Ergebnis</p>
+            <p class="w3-center w3-xlarge"><i><?=$haeufigstes_ergebnis["tore_a"]?></i> : <i><?=$haeufigstes_ergebnis["tore_b"]?></i></p>
+            <p class="w3-center w3-xlarge"><?=$haeufigstes_ergebnis["anzahl"]?> mal</p>      
+        </div>
+    </div>
 </div>
 <div class="w3-row">  
     <div class="w3-container w3-third">
