@@ -59,6 +59,14 @@
         "max_siege"=>$statistics->seriensieger_turnier["max_siege"],
         "datum"=>$statistics->seriensieger_turnier["datum"]
     );
+    $turniersiege =  array(
+        "team_name"=>$statistics->turniersiege["team_name"],
+        "siege"=>$statistics->turniersiege["siege"]
+    );
+    $turnierteilnahmen =  array(
+        "team_name"=>$statistics->turnierteilnahmen["team_name"],
+        "teilnahmen"=>$statistics->turnierteilnahmen["teilnahmen"]
+    );
     $max_entf_team =  array(
         "entfernung"=>number_format($statistics->max_entf_team["entfernung"], 1, ",", "."),
         "ort_a"=>$statistics->max_entf_team["ort_a"],

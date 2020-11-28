@@ -22,6 +22,8 @@ class Statistics{
     public $toraermstes_unentschieden;
     public $seriensieger;
     public $seriensieger_turnier;
+    public $turniersiege;
+    public $turnierteilnahmen;
     public $max_entf_team;
     public $max_anreise;
     public $turnier_max_anreise;
@@ -47,6 +49,8 @@ class Statistics{
         $this->toraermstes_unentschieden=$this->get_toraermstes_unentschieden();
         $this->seriensieger=$this->get_seriensieger();
         $this->seriensieger_turnier=$this->get_seriensieger_turnier();
+        $this->turniersiege=$this->get_turniersiege();
+        $this->turnierteilnahmen=$this->get_turnierteilnahmen();
         $this->max_entf_team=$this->get_max_entfernung_aktiver_ligateams();
         $this->max_anreise=$this->get_max_anreise();
         $this->turnier_max_anreise=$this->get_turnier_max_anreise();
@@ -458,6 +462,38 @@ class Statistics{
         );
         return $result;
     }
+
+    function get_turniersiege() {
+        $sql = "
+        SELECT  tl.teamname as team_name, COUNT( tur_erg.team_id) as siege 
+        FROM `turniere_ergebnisse` tur_erg,`teams_liga`tl
+        WHERE platz=1
+        AND tur_erg.team_id = tl.team_id
+        GROUP BY  tur_erg.team_id
+        ORDER BY siege DESC
+        LIMIT 1
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+
+        return $result;
+    }
+
+    function get_turnierteilnahmen() {
+        $sql = "
+        SELECT  tl.teamname as team_name, COUNT( tur_erg.team_id) as teilnahmen
+        FROM `turniere_ergebnisse` tur_erg,`teams_liga`tl
+        WHERE tur_erg.team_id = tl.team_id
+        GROUP BY  tur_erg.team_id
+        ORDER BY teilnahmen DESC
+        LIMIT 1
+        ";
+        $result = db::readdb($sql);
+        $result = mysqli_fetch_assoc($result);
+
+        return $result;
+    }
+
     //entfernungen
     function get_max_entfernung_aktiver_ligateams()
     {

@@ -134,6 +134,18 @@ include '../../templates/header.tmp.php';
             <p class="w3-center w3-xlarge"><?=$seriensieger_turnier["datum"]?></p>
         </div>
     </div>
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-primary">
+            <p class="w3-center w3-large">Turniersiege saisonübergreifend</p>
+            <p class="w3-center w3-xlarge"><i><?=$turniersiege["team_name"]?></i><br><?=$turniersiege["siege"]?> Turniersiege</p>
+        </div>
+    </div>
+    <div class="w3-container w3-third">
+        <div class="w3-panel w3-card-4 w3-tertiary">
+            <p class="w3-center w3-large">Turnierteilnahmen saisonübergreifend</p>
+            <p class="w3-center w3-xlarge"><i><?=$turnierteilnahmen["team_name"]?></i><br><?=$turnierteilnahmen["teilnahmen"]?> Turniere</p>
+        </div>
+    </div>
 </div>
 <div class="w3-row"> 
     <div class="w3-container w3-third">
