@@ -379,10 +379,15 @@ class Statistics{
 
     function get_haeufigstes_ergebnis() {
         //TODO: WIP
-        $sql = "SELECT tore_a,tore_b, COUNT(*) as anzahl FROM (SELECT turnier_id, spiel_id, tore_a, tore_b FROM `spiele`
+        $sql = "SELECT tore_a,tore_b, COUNT(*) as anzahl FROM (SELECT sp.turnier_id, spiel_id, tore_a, tore_b FROM `spiele` sp, `turniere_liga`tur
         WHERE tore_a > tore_b
-        UNION SELECT turnier_id, spiel_id, tore_b, tore_a FROM `spiele`
-        WHERE tore_a <= tore_b) AS erg
+        AND sp.turnier_id = tur.turnier_id"
+        . $this->saison_sql .
+        "UNION SELECT sp.turnier_id, spiel_id, tore_b, tore_a FROM `spiele` sp, `turniere_liga`tur
+        WHERE tore_a <= tore_b
+        AND sp.turnier_id = tur.turnier_id"
+		. $this->saison_sql .
+        ") AS erg
         GROUP BY tore_a, tore_b
         ORDER BY anzahl DESC
         LIMIT 1
@@ -504,10 +509,12 @@ class Statistics{
     function get_turniersiege() {
         $sql = "
         SELECT  tl.teamname as team_name, COUNT( tur_erg.team_id) as siege 
-        FROM `turniere_ergebnisse` tur_erg,`teams_liga`tl
+        FROM `turniere_ergebnisse` tur_erg,`teams_liga`tl,  `turniere_liga` tur
         WHERE platz=1
-        AND tur_erg.team_id = tl.team_id 
-        GROUP BY  tur_erg.team_id
+        AND tur_erg.team_id = tl.team_id
+        AND tur_erg.turnier_id = tur.turnier_id"
+        . $this->saison_sql .
+        "GROUP BY  tur_erg.team_id
         ORDER BY siege DESC
         LIMIT 1
         ";
@@ -519,10 +526,12 @@ class Statistics{
 
     function get_turnierteilnahmen() {
         $sql = "
-        SELECT  tl.teamname as team_name, COUNT( tur_erg.team_id) as teilnahmen
-        FROM `turniere_ergebnisse` tur_erg,`teams_liga`tl
+        SELECT  tl.teamname as team_name, COUNT(tur_erg.team_id) as teilnahmen
+        FROM `turniere_ergebnisse` tur_erg,`teams_liga`tl, `turniere_liga` tur
         WHERE tur_erg.team_id = tl.team_id
-        GROUP BY  tur_erg.team_id
+        AND tur_erg.turnier_id = tur.turnier_id"
+        . $this->saison_sql .
+        "GROUP BY  tur_erg.team_id
         ORDER BY teilnahmen DESC
         LIMIT 1
         ";
@@ -563,8 +572,9 @@ class Statistics{
         WHERE tur_erg.turnier_id = tur.turnier_id
         AND entf.team_id_a = tur_erg.team_id
         AND entf.team_id_b = tur.ausrichter
-        AND tl_ausrichter.team_id = tur.ausrichter
-        ORDER BY entf.entfernung DESC
+        AND tl_ausrichter.team_id = tur.ausrichter"
+        . $this->saison_sql .
+        "ORDER BY entf.entfernung DESC
         LIMIT 1";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
@@ -579,8 +589,9 @@ class Statistics{
         WHERE tur_erg.turnier_id = tur.turnier_id
         AND entf.team_id_a = tur_erg.team_id
         AND entf.team_id_b = tur.ausrichter
-        AND tl_ausrichter.team_id = tur.ausrichter
-        GROUP BY tur.turnier_id
+        AND tl_ausrichter.team_id = tur.ausrichter"
+        . $this->saison_sql .
+        "GROUP BY tur.turnier_id
         ORDER BY sum_entfernung DESC
         LIMIT 1";
         $result = db::readdb($sql);
@@ -596,8 +607,9 @@ class Statistics{
         WHERE tur_erg.turnier_id = tur.turnier_id
         AND entf.team_id_a = tur_erg.team_id
         AND entf.team_id_b = tur.ausrichter
-        AND tl_ausrichter.team_id = tur.ausrichter
-        GROUP BY tur.turnier_id
+        AND tl_ausrichter.team_id = tur.ausrichter"
+        . $this->saison_sql .
+        "GROUP BY tur.turnier_id
         ORDER BY sum_entfernung
         LIMIT 1";
         $result = db::readdb($sql);
