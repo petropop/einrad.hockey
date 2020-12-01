@@ -96,13 +96,17 @@ include '../../templates/header.tmp.php';
     <div class="w3-container w3-third">
         <div class="w3-panel w3-card-4 w3-tertiary">
             <p class="w3-center w3-large">Tore</p>
-            <p class="w3-center w3-xxxlarge"><?=$tore?></p>
+            <p class="w3-center w3-xxxlarge"><?=$tore["tore"]?></p>
+            <p class="w3-center w3-large">von</p>
+            <p class="w3-center w3-xlarge"><?=$tore["teamname"]?></p>
         </div>
     </div>
     <div class="w3-container w3-third">
         <div class="w3-panel w3-card-4 w3-primary">
             <p class="w3-center w3-large">Gegentore</p>
-            <p class="w3-center w3-xxxlarge"><?=$gegentore?></p>
+            <p class="w3-center w3-xxxlarge"><?=$gegentore["gegentore"]?></p>
+            <p class="w3-center w3-large">von</p>
+            <p class="w3-center w3-xlarge"><?=$gegentore["teamname"]?></p>
         </div>
     </div>
 </div>

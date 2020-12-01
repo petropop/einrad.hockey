@@ -12,8 +12,14 @@
     $gesamt_tore = number_format($statistics->gesamt_tore, 0, ",", ".");
     $spielzeit = secondsToTime($statistics->spielzeit * 60);
     $penalty = number_format($statistics->penalty, 0, ",", ".");
-    $tore = number_format($statistics->tore, 0, ",", ".");
-    $gegentore = number_format($statistics->gegentore, 0, ",", ".");
+    $tore = array(
+        "teamname"=>$statistics->tore["teamname"],
+        "tore"=>number_format($statistics->tore["tore"], 0, ",", "."),
+    );
+    $gegentore = array(
+        "teamname"=>$statistics->gegentore["teamname"],
+        "gegentore"=>number_format($statistics->gegentore["gegentore"], 0, ",", "."),
+    );
     $spielerinnen = number_format($statistics->spielerinnen, 0, ",", ".");
     $spieler = number_format($statistics->spieler, 0, ",", ".");
     $kader = number_format($statistics->kader, 0, ",", ".");

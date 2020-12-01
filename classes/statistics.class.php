@@ -171,7 +171,7 @@ class Statistics{
 
     function get_aktuelle_tore () {
         $sql = "
-        SELECT SUM(sp.tore_a) AS tore,  te.teamname
+        SELECT SUM(sp.tore_a) AS tore,  te.teamname as teamname
         FROM `teams_liga` te, `turniere_liga` tur, (SELECT `turnier_id`, `team_id_a`, `team_id_b`, `tore_a`, `tore_b` FROM `spiele` UNION SELECT `turnier_id`, `team_id_b`, `team_id_a`, `tore_b`, `tore_a` FROM `spiele`) AS sp 
         WHERE sp.turnier_id = tur.turnier_id AND sp.team_id_a = te.team_id"
         . $this->saison_sql . 
@@ -185,12 +185,12 @@ class Statistics{
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
 
-        return $result['tore'];
+        return $result;
     }
 
     function get_aktuelle_gegentore () {
         $sql = "
-        SELECT SUM(sp.tore_b) AS gegentore
+        SELECT SUM(sp.tore_b) AS gegentore,  te.teamname as teamname
         FROM `teams_liga` te, `turniere_liga` tur, (SELECT `turnier_id`, `team_id_a`, `team_id_b`, `tore_a`, `tore_b` FROM `spiele` UNION SELECT `turnier_id`, `team_id_b`, `team_id_a`, `tore_b`, `tore_a` FROM `spiele`) AS sp
         WHERE sp.turnier_id = tur.turnier_id
         AND sp.team_id_a = te.team_id"
@@ -204,7 +204,7 @@ class Statistics{
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);
 
-        return $result['gegentore'];
+        return $result;
     }
 
     function get_aktuelle_spielerinnen() {
