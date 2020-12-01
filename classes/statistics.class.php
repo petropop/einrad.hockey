@@ -33,6 +33,7 @@ class Statistics{
 
     function __construct($saison = Config::SAISON) {
         $this->saison = $saison;
+        $this->saison_akt = Config::SAISON;
         $this->saison_sql = $this->get_saison_sql($saison);
         $this->turniere = $this->get_aktuelle_turniere();
         $this->spiele = $this->get_aktuelle_spiele();
@@ -210,7 +211,7 @@ class Statistics{
         $sql = "
         SELECT COUNT(*) AS spielerinnen 
         FROM `spieler` 
-        WHERE letzte_saison = " . $this->saison . " 
+        WHERE letzte_saison = " . $this->saison_akt . " 
         AND geschlecht = 'w' 
         ";
         $result = db::readdb($sql);
@@ -223,7 +224,7 @@ class Statistics{
         $sql = "
         SELECT COUNT(*) AS spieler 
         FROM `spieler` 
-        WHERE letzte_saison = " . $this->saison . " 
+        WHERE letzte_saison = " . $this->saison_akt . " 
         AND geschlecht = 'm' 
         ";
 
@@ -236,7 +237,7 @@ class Statistics{
         $sql = "
         SELECT COUNT(*) AS kader
         FROM `spieler`
-        WHERE letzte_saison = " . $this->saison . "
+        WHERE letzte_saison = " . $this->saison_akt . "
         GROUP BY team_id
         ORDER BY 1 DESC
         LIMIT 1
@@ -252,7 +253,7 @@ class Statistics{
         SELECT COUNT(*) AS schiedsrichter
         FROM `spieler` 
         WHERE schiri = 'Ausbilder/in' 
-        OR schiri >= " . $this->saison . "
+        OR schiri >= " . $this->saison_akt . "
         ";
         $result = db::readdb($sql);
         $result = mysqli_fetch_assoc($result);

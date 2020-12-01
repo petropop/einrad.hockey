@@ -5,6 +5,33 @@
 require_once '../../logic/first.logic.php'; //autoloader und Session
 require_once '../../logic/statistics.logic.php'; 
 //Variablen
+//Saison wählen:
+$saison_arr = array(CONFIG::SAISON, 'All');
+$count=0;
+foreach ($saison_arr as $saison_i){
+    if($saison_i == $saison){
+        $saison_color = 'w3-text-white';
+        $saison_button = 'w3-primary w3-border w3-border-primary';
+    }else{
+        $saison_color = 'w3-text-grey';
+        $saison_button = 'w3-light-grey w3-border';  
+    }
+    if ($count==0){
+        $saison_string = "<span class='$saison_color'>Aktuelle Saison</span>";
+        $saison_aligned = 'w3-right-align';
+    }
+    else{
+        $saison_string = "<span class='$saison_color'>Saisonübergreifend</span>";
+        $saison_aligned = 'w3-left-align';
+    }
+    $saison_array[$count] = array(
+        $saison_i,
+        "saison_string" =>$saison_string,
+        "saison_button" =>$saison_button,
+        "saison_aligned" =>$saison_aligned,
+    );
+    $count++;
+}
 
 //Formularauswertung
 
@@ -15,7 +42,14 @@ require_once '../../logic/statistics.logic.php';
 /////////////////////////////////////////////////////////////////////////////
 include '../../templates/header.tmp.php';
 ?>
-
+<!-- Saison wählen -->
+<div class="w3-panel">
+    <?php foreach ($saison_array as $saison_dict){?>
+        <div class="w3-container w3-half <?=$saison_dict['saison_aligned']?>">
+        <a class='no w3-hover-text-secondary' href='statistics.php?saison=<?=$saison_dict[0]?>'><span class= 'w3-large w3-bar-item w3-button <?=$saison_dict['saison_button']?> w3-hover-primary'><?=$saison_dict["saison_string"]?></span></a>
+        </div>
+    <?php } //endforeach?>
+</div>
 <div class="w3-row">
     <div class="w3-container w3-third">
         <div class="w3-panel w3-card-4 w3-primary">

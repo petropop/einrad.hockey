@@ -1,6 +1,10 @@
 <?php
-    
-    $statistics = new Statistics();
+    if (isset($_GET['saison'])){
+        $saison = $_GET['saison'];
+    }else{
+        $saison = CONFIG::SAISON;
+    }
+    $statistics = new Statistics($saison);
     $saison = $statistics->saison;
     $turniere = number_format($statistics->turniere, 0, ",", ".");
     $spiele = number_format($statistics->spiele, 0, ",", ".");
