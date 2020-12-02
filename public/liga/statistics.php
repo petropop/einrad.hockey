@@ -98,7 +98,7 @@ include '../../templates/header.tmp.php';
             <p class="w3-center w3-large">Tore</p>
             <p class="w3-center w3-xxxlarge"><?=$tore["tore"]?></p>
             <p class="w3-center w3-large">von</p>
-            <p class="w3-center w3-xlarge"><?=$tore["teamname"]?></p>
+            <p class="w3-center w3-xlarge"><i><?=$tore["teamname"]?></i></p>
         </div>
     </div>
     <div class="w3-container w3-third">
@@ -106,7 +106,7 @@ include '../../templates/header.tmp.php';
             <p class="w3-center w3-large">Gegentore</p>
             <p class="w3-center w3-xxxlarge"><?=$gegentore["gegentore"]?></p>
             <p class="w3-center w3-large">von</p>
-            <p class="w3-center w3-xlarge"><?=$gegentore["teamname"]?></p>
+            <p class="w3-center w3-xlarge"><i><?=$gegentore["teamname"]?></i></p>
         </div>
     </div>
 </div>
