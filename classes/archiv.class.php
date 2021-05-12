@@ -126,4 +126,29 @@ class Archiv
         db::terminate();
         db::initialize();
     }
+
+    public static function get_uebersicht()
+    {
+        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+        
+        $sql = "
+            SELECT turniere_liga.saison, turniere.anzahl as turnier_anzahl, teams.anzahl as teams_anzahl, teamname as meister
+            FROM turniere_liga
+            LEFT JOIN (SELECT saison, count(*) as anzahl FROM `turniere_liga` GROUP BY saison) AS turniere ON turniere_liga.saison = turniere.saison
+            LEFT JOIN (SELECT saison, count(*) as anzahl FROM `teams` WHERE ligateam = 'Ja' GROUP BY saison) AS teams ON turniere_liga.saison = teams.saison
+            LEFT JOIN (
+                SELECT turniere_liga.saison, teams.teamname
+                FROM turniere_ergebnisse, turniere_liga, teams
+                WHERE turniere_ergebnisse.turnier_id = turniere_liga.turnier_id
+                AND turniere_ergebnisse.team_id = teams.team_id
+                AND turniere_ergebnisse.platz = 1
+                AND turniere_ergebnisse.turnier_id = 827) as meister ON turniere_liga.saison = meister.saison
+            GROUP BY turniere_liga.saison
+            ORDER BY turniere_liga.saison DESC
+        ";
+
+        $result = db::$db->query($sql)->esc()->fetch();
+
+        return $result;
+    }
 }
