@@ -98,4 +98,32 @@ class Archiv
         db::initialize();
 
     }
+
+    public static function transfer_ergebnisse(int $saison)
+    {
+        $extract_sql = "
+            SELECT turniere_ergebnisse.*
+            FROM turniere_ergebnisse, turniere_liga
+            WHERE turniere_ergebnisse.turnier_id = turniere_liga.turnier_id
+            AND turniere_liga.saison = ?
+        ";
+
+        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
+
+        db::terminate();
+        
+        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+
+        $insert_sql = "
+            INSERT INTO turniere_ergebnisse (turnier_ergebnis_id, team_id, turnier_id, ergebnis, platz)
+            VALUES (?, ?, ?, ?, ?)
+        ";        
+
+        foreach ($result as $ergebnis) {
+            db::$db->query($insert_sql, $ergebnis['turnier_ergebnis_id'], $ergebnis['team_id'], $ergebnis['turnier_id'], $ergebnis['ergebnis'], $ergebnis['platz']);
+        }
+
+        db::terminate();
+        db::initialize();
+    }
 }
