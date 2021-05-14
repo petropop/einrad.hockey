@@ -244,4 +244,18 @@ class Archiv
 
         return $result;
     }
+
+    public static function get_turnierdetails(int $turnier_id)
+    {
+        $sql = "
+            SELECT ort, datum
+            FROM turniere_liga
+            LEFT JOIN turniere_details ON turniere_liga.turnier_id = turniere_details.turnier_id
+            WHERE turniere_liga.turnier_id = ?
+        ";
+
+        $result = db::$db->query($sql, $turnier_id)->esc()->fetch_row();
+
+        return $result;
+    }
 }

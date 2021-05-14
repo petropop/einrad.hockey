@@ -10,6 +10,7 @@ $turnier_id = $_GET['turnier_id'];
 $teams = Archiv::get_teams($turnier_id);
 $spiele = Archiv::get_spiele($turnier_id);
 $ergebnisse = Archiv::get_ergebnisse($turnier_id);
+$turnierdetails = Archiv::get_turnierdetails($turnier_id);
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////LAYOUT///////////////////////////////////
@@ -20,7 +21,7 @@ include '../../templates/header.tmp.php';
 ?>
 
 <!-- Archiv -->
-<h1 class="w3-text-primary">Archiv, Turnier <?=$turnier_id?></h1>
+<h1 class="w3-text-primary">Ergebnis in <?=$turnierdetails['ort']?>, <?=strftime("%d.%m.%Y", strtotime($turnierdetails['datum']))?></h1>
 
 <h2 class="w3-text-primary">Teams</h2>
 <div class="w3-responsive w3-card">
