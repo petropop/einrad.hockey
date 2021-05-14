@@ -6,7 +6,7 @@ require_once '../../init.php';
 
 db::terminate();
 db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
-$saison = (isset($_GET['saison'])) ? (int)$_GET['saison'] : Config::SAISON;
+$saison = $_GET['saison'];
 $turniere = Archiv::get_turniere($saison);
 
 /////////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,7 @@ include '../../templates/header.tmp.php';
     <?php foreach ($turniere as $turnier) {?>
         <tr>
             <td><?=strftime("%a", strtotime($turnier['datum']))?>, <?=strftime("%d.%m.", strtotime($turnier['datum']))?></a></td>
-            <td><?=$turnier['ort']?></td>
+            <td><?=Html::link('archiv_turnier.php?turnier_id='. $turnier['turnier_id'], $turnier['ort'], false)?></td>
             <td><?=$turnier['art'] == 'final' ? '--' : $turnier['art']?></td>
             <td><?=$turnier['tblock'] == 'final' ? 'FINALE' : $turnier['tblock'] ?></td>
         </tr>

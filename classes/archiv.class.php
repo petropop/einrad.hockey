@@ -184,7 +184,7 @@ class Archiv
     public static function get_turniere(int $saison)
     {
         $sql = "
-            SELECT art, tblock, datum, ort 
+            SELECT turniere_liga.turnier_id, art, tblock, datum, ort 
             FROM turniere_liga
             LEFT JOIN turniere_details ON turniere_details.turnier_id = turniere_liga.turnier_id
             WHERE saison = ?
@@ -192,6 +192,55 @@ class Archiv
         ";
 
         $result = db::$db->query($sql, $saison)->esc()->fetch();
+
+        return $result;
+    }
+
+    public static function get_spiele(int $turnier_id)
+    {
+        $sql = "
+            SELECT spiel_id, teams_a.teamname AS team_a, teams_b.teamname AS team_b, tore_a, tore_b, penalty_a, penalty_b
+            FROM spiele
+            LEFT JOIN turniere_liga ON turniere_liga.turnier_id = spiele.turnier_id
+            LEFT JOIN teams AS teams_a ON spiele.team_id_a = teams_a.team_id AND turniere_liga.saison = teams_a.saison
+            LEFT JOIN teams AS teams_b ON spiele.team_id_b = teams_b.team_id AND turniere_liga.saison = teams_b.saison
+            WHERE spiele.turnier_id = ?
+            ORDER BY spiel_id ASC
+        ";
+
+        $result = db::$db->query($sql, $turnier_id)->esc()->fetch();
+
+        return $result;
+    }
+
+    public static function get_ergebnisse(int $turnier_id)
+    {
+        $sql = "
+            SELECT platz, teamname, ergebnis
+            FROM turniere_ergebnisse
+            LEFT JOIN turniere_liga ON turniere_ergebnisse.turnier_id = turniere_liga.turnier_id
+            LEFT JOIN teams ON turniere_ergebnisse.team_id = teams.team_id AND turniere_liga.saison = teams.saison
+            WHERE turniere_ergebnisse.turnier_id = ?
+            ORDER BY platz ASC
+        ";
+
+        $result = db::$db->query($sql, $turnier_id)->esc()->fetch();
+
+        return $result;
+    }
+
+    public static function get_teams(int $turnier_id)
+    {
+        $sql = "
+            SELECT teamname
+            FROM turniere_ergebnisse
+            LEFT JOIN turniere_liga ON turniere_ergebnisse.turnier_id = turniere_liga.turnier_id
+            LEFT JOIN teams ON turniere_ergebnisse.team_id = teams.team_id AND turniere_liga.saison = teams.saison
+            WHERE turniere_ergebnisse.turnier_id = ?
+            ORDER BY teamname ASC
+        ";
+
+        $result = db::$db->query($sql, $turnier_id)->esc()->fetch();
 
         return $result;
     }

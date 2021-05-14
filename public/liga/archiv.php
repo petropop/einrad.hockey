@@ -31,7 +31,7 @@ include '../../templates/header.tmp.php';
         </thead>
     <?php foreach ($uebersicht as $saison) {?>
         <tr>
-            <td><?=Html::link('archiv_saison.php?saison='. $saison['saison'], $saison['saison'], false)?></a></td>
+            <td><?=Html::link('archiv_saison.php?saison='. $saison['saison'], $saison['saison'], false)?></td>
             <td><?=$saison['turnier_anzahl']?></td>
             <td><?=$saison['teams_anzahl']?></td>
             <td><?=$saison['meister'] ?? 'Kein Meister ermittelt'?></td>
