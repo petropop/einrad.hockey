@@ -33,7 +33,7 @@ include '../../templates/header.tmp.php';
     <?php foreach ($turniere as $turnier) {?>
         <tr>
             <td><?=strftime("%a", strtotime($turnier['datum']))?>, <?=strftime("%d.%m.", strtotime($turnier['datum']))?></a></td>
-            <td><?=$turnier['turnier_id']?></td>
+            <td><?=$turnier['ort']?></td>
             <td><?=$turnier['art'] == 'final' ? '--' : $turnier['art']?></td>
             <td><?=$turnier['tblock'] == 'final' ? 'FINALE' : $turnier['tblock'] ?></td>
         </tr>

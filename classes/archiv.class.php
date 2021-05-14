@@ -184,8 +184,9 @@ class Archiv
     public static function get_turniere(int $saison)
     {
         $sql = "
-            SELECT turnier_id, art, tblock, datum 
+            SELECT art, tblock, datum, ort 
             FROM turniere_liga
+            LEFT JOIN turniere_details ON turniere_details.turnier_id = turniere_liga.turnier_id
             WHERE saison = ?
             ORDER BY datum ASC
         ";
