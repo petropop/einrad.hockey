@@ -7,6 +7,7 @@ require_once '../../init.php';
 db::terminate();
 db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
 $saison = $_GET['saison'];
+$saisondetails = Archiv::get_saisondetails($saison);
 $turniere = Archiv::get_turniere($saison);
 
 /////////////////////////////////////////////////////////////////////////////
@@ -18,7 +19,7 @@ include '../../templates/header.tmp.php';
 ?>
 
 <!-- Archiv -->
-<h1 class="w3-text-primary">Archiv, Saison <?=$saison?></h1>
+<h1 class="w3-text-primary">Archiv der Saison <?=$saisondetails?></h1>
 
 <div class="w3-responsive w3-card">
     <table class="w3-table w3-striped">

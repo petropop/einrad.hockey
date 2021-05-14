@@ -161,8 +161,9 @@ class Archiv
         db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
         
         $sql = "
-            SELECT turniere_liga.saison, turniere.anzahl as turnier_anzahl, teams.anzahl as teams_anzahl, teamname as meister
+            SELECT saisonname, turniere_liga.saison, turniere.anzahl as turnier_anzahl, teams.anzahl as teams_anzahl, teamname as meister
             FROM turniere_liga
+            LEFT JOIN saisons ON saisons.saison_id = turniere_liga.saison
             LEFT JOIN (SELECT saison, count(*) as anzahl FROM `turniere_liga` GROUP BY saison) AS turniere ON turniere_liga.saison = turniere.saison
             LEFT JOIN (SELECT saison, count(*) as anzahl FROM `teams` WHERE ligateam = 'Ja' GROUP BY saison) AS teams ON turniere_liga.saison = teams.saison
             LEFT JOIN (
@@ -255,6 +256,19 @@ class Archiv
         ";
 
         $result = db::$db->query($sql, $turnier_id)->esc()->fetch_row();
+
+        return $result;
+    }
+
+    public static function get_saisondetails(int $saison)
+    {
+        $sql = "
+            SELECT saisonname 
+            FROM saisons
+            WHERE saison_id = ?
+        ";
+
+        $result = db::$db->query($sql, $saison)->esc()->fetch_one();
 
         return $result;
     }

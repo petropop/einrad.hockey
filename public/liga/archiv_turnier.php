@@ -47,8 +47,8 @@ include '../../templates/header.tmp.php';
                 <th><b>Spiel</b></th>
                 <th><b>Team A</b></th>
                 <th><b>Team B</b></th>
-                <th colspan="3"><b>Ergebnis</b></th>
-                <th colspan="3"><b>Penalty</b></th>
+                <th colspan="3" class="w3-center"><b>Ergebnis</b></th>
+                <th colspan="3" class="w3-center"><b>Penalty</b></th>
             </tr>
         </thead>
     <?php foreach ($spiele as $spiel) {?>
@@ -56,12 +56,12 @@ include '../../templates/header.tmp.php';
             <td><?=$spiel['spiel_id']?></td>
             <td><?=$spiel['team_a']?></td>
             <td><?=$spiel['team_b']?></td>
-            <td><?=$spiel['tore_a']?></td>
-            <td>:</td>
-            <td><?=$spiel['tore_b']?></td>
-            <td><?=$spiel['penalty_a']?></td>
-            <td>:</td>
-            <td><?=$spiel['penalty_b']?></td>
+            <td class="w3-right-align"><?=$spiel['tore_a']?></td>
+            <td class="w3-center">:</td>
+            <td class="w3-right-left"><?=$spiel['tore_b']?></td>
+            <td class="w3-right-align"><?=$spiel['penalty_a']?></td>
+            <td class="w3-center">:</td>
+            <td class="w3-right-left"><?=$spiel['penalty_b']?></td>
         </tr>
     <?php } ?>
     </table>
