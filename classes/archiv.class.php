@@ -151,4 +151,18 @@ class Archiv
 
         return $result;
     }
+
+    public static function get_turniere(int $saison)
+    {
+        $sql = "
+            SELECT turnier_id, art, tblock, datum 
+            FROM turniere_liga
+            WHERE saison = ?
+            ORDER BY datum ASC
+        ";
+
+        $result = db::$db->query($sql, $saison)->esc()->fetch();
+
+        return $result;
+    }
 }
