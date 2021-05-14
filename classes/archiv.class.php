@@ -127,6 +127,35 @@ class Archiv
         db::initialize();
     }
 
+    public static function transfer_turnierdetails(int $saison)
+    {
+        $extract_sql = "
+            SELECT turniere_details.turnier_id, ort
+            FROM turniere_liga
+            LEFT JOIN turniere_details ON turniere_details.turnier_id = turniere_liga.turnier_id
+            WHERE turniere_liga.phase = 'ergebnis'
+            AND saison = ?
+        ";
+
+        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
+
+        db::terminate();
+        
+        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+
+        $insert_sql = "
+            INSERT INTO turniere_details (turnier_id, ort)
+            VALUES (?, ?)
+        ";        
+
+        foreach ($result as $detail) {
+            db::$db->query($insert_sql, $detail['turnier_id'], $detail['ort']);
+        }
+
+        db::terminate();
+        db::initialize();
+    }
+
     public static function get_uebersicht()
     {
         db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
