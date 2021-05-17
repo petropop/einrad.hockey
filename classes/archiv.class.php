@@ -2,6 +2,17 @@
 
 class Archiv
 {
+    public static function archivieren(int $saison)
+    {
+        self::transfer_teams($saison);
+        self::transfer_turniere($saison);
+        self::transfer_spiele($saison);
+        self::transfer_ergebnisse($saison);
+        self::transfer_turnierdetails($saison);
+        self::transfer_teamstrafen($saison);
+        self::transfer_spielplandetails($saison);
+    }
+
     /**
      * Übertragen der Teams in die Archivdatenbank.
      * @param $saison

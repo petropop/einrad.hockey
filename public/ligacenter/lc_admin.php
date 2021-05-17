@@ -69,6 +69,12 @@ if (isset($_POST['mailbot'])){
     MailBot::mail_bot();
 }
 
+//Saison archivieren
+if (isset($_POST['archiv'])){
+    $saison = Config::SAISON;
+    Archiv::archivieren($saison);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////LAYOUT///////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -137,6 +143,13 @@ include '../../templates/header.tmp.php';?>
     <h4 class="w3-bottombar w3-text-primary">Ligabot ausführen</h4>
     <p>
         <input type='submit' name='ligabot' value='Ligabot ausführen' class="w3-button w3-secondary">
+    </p>
+</form>
+<!-- Archiv -->
+<form method='post'>
+    <h4 class="w3-bottombar w3-text-primary">Saison archivieren</h4>
+    <p>
+        <input type='submit' name='archiv' value='Saison archivieren' class="w3-button w3-secondary">
     </p>
 </form>
 <?php include '../../templates/footer.tmp.php';
