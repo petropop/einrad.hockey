@@ -10,6 +10,7 @@ class Config
     public const BASE_PATH = Env::BASE_PATH;
     public const HOST_NAME = Env::HOST_NAME;
     public const DATABASE = Env::DATABASE;
+    public const ARCHIV_DATABASE = Env::ARCHIV_DATABASE;
     public const USER_NAME = Env::USER_NAME;
     public const PASSWORD = Env::PASSWORD;
     public const ACTIVATE_EMAIL = Env::HOST_NAME; // Bei True, werden Emails tatsächlich versendet, bei false debugging

@@ -24,6 +24,25 @@ class db
     }
 
     /**
+     * Stellt die Verbindung zur Datenbank her
+     *
+     * Hiermit kann von überall her auf den dbWrapper zugegriffen werden ohne das Datenbank-Klassenobjekt
+     * immer übergeben zu müssen.
+     *
+     * @param string $host
+     * @param string $user
+     * @param string $password
+     * @param string $database
+     */
+    public static function initialize_archiv(string $host = Env::HOST_NAME,
+                                      string $user = Env::USER_NAME,
+                                      string $password = Env::PASSWORD,
+                                      string $database = Env::ARCHIV_DATABASE): void
+    {
+        self::$db = new dbWrapper($host, $user, $password, $database);
+    }
+
+    /**
      * Terminiert die Datenbankverbindung und ermöglicht eine neue Initialisierung zu einer anderen Datenbank
      */
     public static function terminate(): void

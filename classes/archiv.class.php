@@ -17,8 +17,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         db::terminate();
-        
-        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+        db::initialize_archiv();
 
         $insert_sql = "
             INSERT INTO archiv_teams_liga (team_id, saison, teamname, ligateam)
@@ -50,8 +49,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         db::terminate();
-        
-        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+        db::initialize_archiv();
 
         $insert_sql = "
             INSERT INTO archiv_turniere_liga (turnier_id, saison, spieltag, datum, plaetze, tblock, art) 
@@ -83,8 +81,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         db::terminate();
-        
-        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+        db::initialize_archiv();
 
         $insert_sql = "
             INSERT INTO archiv_turniere_spiele (turnier_id, spiel_id, team_id_a, team_id_b, schiri_team_id_a, schiri_team_id_b, tore_a, tore_b, penalty_a, penalty_b)
@@ -112,8 +109,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         db::terminate();
-        
-        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+        db::initialize_archiv();
 
         $insert_sql = "
             INSERT INTO archiv_turniere_ergebnisse (team_id, turnier_id, ergebnis, platz)
@@ -141,8 +137,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         db::terminate();
-        
-        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+        db::initialize_archiv();
 
         $insert_sql = "
             INSERT INTO archiv_turniere_details (turnier_id, tname, hallenname, startzeit, ausrichter, ort, format)
@@ -168,8 +163,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         db::terminate();
-
-        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+        db::initialize_archiv();
 
         $insert_sql = "
             INSERT INTO archiv_teams_strafen (team_id, turnier_id, strafe)
@@ -196,8 +190,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         db::terminate();
-
-        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+        db::initialize_archiv();
 
         $insert_sql = "
             INSERT INTO archiv_spielplan_details (spielplan, plaetze, anzahl_halbzeiten, halbzeit_laenge, puffer, pausen)
@@ -214,7 +207,7 @@ class Archiv
 
     public static function get_uebersicht()
     {
-        db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+        db::initialize_archiv();
         
         $sql = "
             SELECT saisonname, archiv_turniere_liga.saison, turniere.anzahl as turnier_anzahl, teams.anzahl as teams_anzahl, teamname as meister
@@ -241,6 +234,8 @@ class Archiv
 
     public static function get_turniere(int $saison)
     {
+        db::initialize_archiv();
+        
         $sql = "
             SELECT archiv_turniere_liga.turnier_id, datum, ort, art, tblock
             FROM archiv_turniere_liga
@@ -256,6 +251,8 @@ class Archiv
 
     public static function get_spiele(int $turnier_id)
     {
+        db::initialize_archiv();
+        
         $sql = "
             SELECT spiel_id, teams_a.teamname AS team_a, teams_b.teamname AS team_b, tore_a, tore_b, penalty_a, penalty_b
             FROM archiv_turniere_spiele
@@ -273,6 +270,8 @@ class Archiv
 
     public static function get_ergebnisse(int $turnier_id)
     {
+        db::initialize_archiv();
+        
         $sql = "
             SELECT platz, teamname, ergebnis
             FROM archiv_turniere_ergebnisse
@@ -289,6 +288,8 @@ class Archiv
 
     public static function get_teams(int $turnier_id)
     {
+        db::initialize_archiv();
+        
         $sql = "
             SELECT teamname
             FROM archiv_turniere_ergebnisse
@@ -305,6 +306,8 @@ class Archiv
 
     public static function get_turnierdetails(int $turnier_id)
     {
+        db::initialize_archiv();
+        
         $sql = "
             SELECT ort, datum
             FROM archiv_turniere_liga
@@ -319,6 +322,8 @@ class Archiv
 
     public static function get_saisondetails(int $saison)
     {
+        db::initialize_archiv();
+        
         $sql = "
             SELECT saisonname 
             FROM archiv_saisons
