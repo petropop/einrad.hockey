@@ -230,6 +230,7 @@ class Archiv
                 AND archiv_turniere_ergebnisse.platz = 1
                 AND archiv_turniere_ergebnisse.turnier_id = 827) as meister ON archiv_turniere_liga.saison = meister.saison
             GROUP BY archiv_turniere_liga.saison
+            HAVING archiv_turniere_liga.saison = 26
             ORDER BY archiv_turniere_liga.saison DESC
         ";
 
