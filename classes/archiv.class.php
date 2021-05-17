@@ -14,22 +14,16 @@ class Archiv
             WHERE aktiv = 'Ja'
         ";
 
-        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
-
-        db::terminate();
-        db::initialize_archiv();
-
         $insert_sql = "
             INSERT INTO archiv_teams_liga (team_id, saison, teamname, ligateam)
             VALUES (?, ?, ?, ?)
-        ";        
+        ";
+        
+        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         foreach ($result as $team) {
             db::$db->query($insert_sql, $team['team_id'], $team['saison'], $team['teamname'], $team['ligateam']);
         }
-
-        db::terminate();
-        db::initialize();
     }
 
     /**
@@ -46,23 +40,16 @@ class Archiv
             AND phase = 'ergebnis'
         ";
 
-        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
-
-        db::terminate();
-        db::initialize_archiv();
-
         $insert_sql = "
             INSERT INTO archiv_turniere_liga (turnier_id, saison, spieltag, datum, plaetze, tblock, art) 
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        ";        
+        ";
+
+        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         foreach ($result as $turnier) {
             db::$db->query($insert_sql, $turnier['turnier_id'], $turnier['saison'], $turnier['spieltag'], $turnier['datum'], $turnier['plaetze'], $turnier['tblock'], $turnier['art']);
         }
-
-        db::terminate();
-        db::initialize();
-
     }
 
     /**
@@ -78,23 +65,16 @@ class Archiv
             WHERE turniere_liga.saison = ?
         ";
 
-        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
-
-        db::terminate();
-        db::initialize_archiv();
-
         $insert_sql = "
             INSERT INTO archiv_turniere_spiele (turnier_id, spiel_id, team_id_a, team_id_b, schiri_team_id_a, schiri_team_id_b, tore_a, tore_b, penalty_a, penalty_b)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ";        
+        ";  
+
+        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();      
 
         foreach ($result as $spiel) {
             db::$db->query($insert_sql, $spiel['turnier_id'], $spiel['spiel_id'], $spiel['team_id_a'], $spiel['team_id_b'], $spiel['schiri_team_id_a'], $spiel['schiri_team_id_b'], $spiel['tore_a'], $spiel['tore_b'], $spiel['penalty_a'], $spiel['penalty_b']);
         }
-
-        db::terminate();
-        db::initialize();
-
     }
 
     public static function transfer_ergebnisse(int $saison)
@@ -106,22 +86,16 @@ class Archiv
             WHERE turniere_liga.saison = ?
         ";
 
-        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
-
-        db::terminate();
-        db::initialize_archiv();
-
         $insert_sql = "
             INSERT INTO archiv_turniere_ergebnisse (team_id, turnier_id, ergebnis, platz)
             VALUES (?, ?, ?, ?)
-        ";        
+        ";  
+
+        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();      
 
         foreach ($result as $ergebnis) {
             db::$db->query($insert_sql, $ergebnis['team_id'], $ergebnis['turnier_id'], $ergebnis['ergebnis'], $ergebnis['platz']);
         }
-
-        db::terminate();
-        db::initialize();
     }
 
     public static function transfer_turnierdetails(int $saison)
@@ -134,22 +108,16 @@ class Archiv
             AND saison = ?
         ";
 
-        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
-
-        db::terminate();
-        db::initialize_archiv();
-
         $insert_sql = "
             INSERT INTO archiv_turniere_details (turnier_id, tname, hallenname, startzeit, ausrichter, ort, format)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ";        
 
+        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
+
         foreach ($result as $detail) {
             db::$db->query($insert_sql, $detail['turnier_id'], $detail['tname'], $detail['hallenname'], $detail['startzeit'], $detail['ausrichter'], $detail['ort'], $detail['format']);
         }
-
-        db::terminate();
-        db::initialize();
     }
 
     public static function transfer_teamstrafen(int $saison)
@@ -160,22 +128,16 @@ class Archiv
             WHERE saison = ?
         ";
 
-        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
-
-        db::terminate();
-        db::initialize_archiv();
-
         $insert_sql = "
             INSERT INTO archiv_teams_strafen (team_id, turnier_id, strafe)
             VALUES (?, ?, ?)
         ";
 
+        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
+
         foreach ($result as $strafe) {
             db::$db->query($insert_sql, $strafe['team_id'], $strafe['turnier_id'], $strafe['strafe']);
         }
-
-        db::terminate();
-        db::initialize();
     }
 
     public static function transfer_spielplandetails(int $saison)
@@ -187,28 +149,20 @@ class Archiv
             WHERE turniere_liga.saison = ?
         ";
 
-        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
-
-        db::terminate();
-        db::initialize_archiv();
-
         $insert_sql = "
             INSERT INTO archiv_spielplan_details (spielplan, plaetze, anzahl_halbzeiten, halbzeit_laenge, puffer, pausen)
             VALUES (?, ?, ?, ?, ?, ?)
         ";
 
+        $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
+
         foreach ($result as $spielplan) {
             db::$db->query($insert_sql, $spielplan['spielplan'], $spielplan['plaetze'], $spielplan['anzahl_halbzeiten'], $spielplan['halbzeit_laenge'], $spielplan['puffer'], $spielplan['pausen']);
         }
-
-        db::terminate();
-        db::initialize();
     }
 
     public static function get_uebersicht()
     {
-        db::initialize_archiv();
-        
         $sql = "
             SELECT saisonname, archiv_turniere_liga.saison, turniere.anzahl as turnier_anzahl, teams.anzahl as teams_anzahl, teamname as meister
             FROM archiv_turniere_liga
@@ -234,8 +188,6 @@ class Archiv
 
     public static function get_turniere(int $saison)
     {
-        db::initialize_archiv();
-        
         $sql = "
             SELECT archiv_turniere_liga.turnier_id, datum, ort, art, tblock
             FROM archiv_turniere_liga
@@ -251,9 +203,7 @@ class Archiv
 
     public static function get_spiele(int $turnier_id)
     {
-        db::initialize_archiv();
-        
-        $sql = "
+       $sql = "
             SELECT spiel_id, teams_a.teamname AS team_a, teams_b.teamname AS team_b, tore_a, tore_b, penalty_a, penalty_b
             FROM archiv_turniere_spiele
             LEFT JOIN archiv_turniere_liga ON archiv_turniere_liga.turnier_id = archiv_turniere_spiele.turnier_id
@@ -270,8 +220,6 @@ class Archiv
 
     public static function get_ergebnisse(int $turnier_id)
     {
-        db::initialize_archiv();
-        
         $sql = "
             SELECT platz, teamname, ergebnis
             FROM archiv_turniere_ergebnisse
@@ -288,8 +236,6 @@ class Archiv
 
     public static function get_teams(int $turnier_id)
     {
-        db::initialize_archiv();
-        
         $sql = "
             SELECT teamname
             FROM archiv_turniere_ergebnisse
@@ -306,8 +252,6 @@ class Archiv
 
     public static function get_turnierdetails(int $turnier_id)
     {
-        db::initialize_archiv();
-        
         $sql = "
             SELECT ort, datum
             FROM archiv_turniere_liga
@@ -322,8 +266,6 @@ class Archiv
 
     public static function get_saisondetails(int $saison)
     {
-        db::initialize_archiv();
-        
         $sql = "
             SELECT saisonname 
             FROM archiv_saisons

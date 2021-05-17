@@ -4,6 +4,7 @@
 /////////////////////////////////////////////////////////////////////////////
 require_once '../../init.php';
 
+db::initialize_archiv();
 $uebersicht = Archiv::get_uebersicht();
 
 /////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,7 @@ include '../../templates/header.tmp.php';
 <!-- Archiv -->
 <h1 class="w3-text-primary">Archiv</h1>
 
+<p><i>Im Moment wird an einer Überführung des Archivs in das neue System gearbeitet. Dies werden wir Stück für Stück nachholen.</i></p>
 <p>Die Deutsche Einradhockeyliga spielt seit 1995 den <i>Meister der Deutschen Einradhockeyliga</i> aus. In der ersten Saison wurde nach einem Modus Jeder-gegen-Jeden gespielt. Meister wurde das Team mit den meisten Punkten. Seit 1996 wird in einem Turniermodus gespielt und am Ende der Saison in einem Finalturnier der Meister der Deutschen Einradhockeyliga ermittelt.</p>
 
 <div class="w3-responsive w3-card w3-section">

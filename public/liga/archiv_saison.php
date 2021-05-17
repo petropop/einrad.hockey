@@ -4,8 +4,7 @@
 /////////////////////////////////////////////////////////////////////////////
 require_once '../../init.php';
 
-db::terminate();
-db::initialize(Env::HOST_NAME, Env::USER_NAME, Env::PASSWORD, 'db_einradhockey_archiv');
+db::initialize_archiv();
 $saison = $_GET['saison'];
 $saisondetails = Archiv::get_saisondetails($saison);
 $turniere = Archiv::get_turniere($saison);
