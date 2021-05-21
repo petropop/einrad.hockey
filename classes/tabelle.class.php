@@ -314,12 +314,14 @@ class Tabelle
      * @param int $saison
      * @return array
      */
-    public static function get_rang_tabelle(int $spieltag, int $saison = Config::SAISON): array
+    public static function get_rang_tabelle(int $spieltag, int $saison = Config::SAISON, bool $aktuell = TRUE): array
     {
 
-        $ausnahme = ($saison === 26) ? 'OR turniere_liga.saison = 24' : '';
+        if ($aktuell) {
 
-        $sql = "
+            $ausnahme = ($saison === 26) ? 'OR turniere_liga.saison = 24' : '';
+
+            $sql = "
                 SELECT turniere_ergebnisse.ergebnis, turniere_ergebnisse.turnier_id, turniere_liga.datum, 
                 turniere_liga.saison, teams_liga.teamname, teams_liga.team_id, turniere_liga.spieltag 
                 FROM turniere_ergebnisse
@@ -337,7 +339,31 @@ class Tabelle
                     $ausnahme)
                     )
                 ORDER BY turniere_liga.saison DESC, turniere_liga.datum DESC";
-        $result = db::$db->query($sql, $spieltag, $saison, $saison)->esc()->fetch();
+
+            $result = db::$db->query($sql, $spieltag, $saison, $saison)->esc()->fetch();
+
+        } else {
+            
+            // Bisher ist keine Unterscheidung der Spieltage vorhanden, kann aber eingesetzt werden
+            // AND ((archiv_turniere_liga.saison = ? AND archiv_turniere_liga.spieltag <= 15) OR archiv_turniere_liga.saison = ? - 1)
+
+            $sql = "
+                SELECT archiv_turniere_ergebnisse.ergebnis, archiv_turniere_ergebnisse.turnier_id, archiv_turniere_liga.datum, archiv_turniere_liga.saison, archiv_teams_liga.  teamname, archiv_teams_liga.team_id, archiv_turniere_liga.spieltag
+                FROM archiv_teams_liga
+                INNER JOIN archiv_turniere_ergebnisse ON archiv_turniere_ergebnisse.team_id = archiv_teams_liga.team_id
+                INNER JOIN archiv_turniere_liga on archiv_turniere_ergebnisse.turnier_id = archiv_turniere_liga.turnier_id
+                WHERE archiv_teams_liga.ligateam = 'Ja'
+                AND archiv_turniere_liga.tblock NOT LIKE '%final%' 
+                AND archiv_turniere_liga.tblock NOT LIKE '%quali%'
+                AND archiv_teams_liga.saison = ?
+                AND (archiv_turniere_liga.saison = ? OR archiv_turniere_liga.saison = ? - 1)
+                ORDER BY archiv_teams_liga.team_id, archiv_turniere_liga.datum DESC
+            ";
+
+            $result = db::$db->query($sql, $saison, $saison, $saison)->esc()->fetch();
+
+        }
+        
         $return = [];
         $counter = [];
 
@@ -349,8 +375,12 @@ class Tabelle
             $color =  ($eintrag['saison'] != $saison) ? "w3-text-green" : 'w3-text-primary';
 
             //Verlinkung des Ergebnisses hinzufügen
-            $link = "ergebnisse.php?saison=" . $eintrag['saison'] . "#" . $eintrag['turnier_id'];
-
+            if ($aktuell) {
+                $link = "ergebnisse.php?saison=" . $eintrag['saison'] . "#" . $eintrag['turnier_id'];
+            } else {
+                $link = "archiv_turnier.php?turnier_id=" . $eintrag['turnier_id'];
+            }
+            
             //Initialisierung
             if (!isset($return[$team_id])) {
                 //Zähler der Ergebnisse (Max 5)

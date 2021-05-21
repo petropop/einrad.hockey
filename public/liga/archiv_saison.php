@@ -9,6 +9,8 @@ $saison = $_GET['saison'];
 $saisondetails = Archiv::get_saisondetails($saison);
 $turniere = Archiv::get_turniere($saison);
 
+$rang_tabelle = Tabelle::get_rang_tabelle(0, $saison, FALSE);
+
 /////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////LAYOUT///////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -20,6 +22,35 @@ include '../../templates/header.tmp.php';
 <!-- Archiv -->
 <h1 class="w3-text-primary">Archiv der Saison <?=$saisondetails?></h1>
 
+<h2 class="w3-text-primary">Rangtabelle der Saison <?=$saisondetails?></h2>
+<!-- Rangtabelle -->
+<div class="w3-responsive w3-card">
+    <table class="w3-table w3-striped">
+        <thead class="w3-primary">
+            <tr>
+                <th><b>#</b></th>
+                <th class="w3-center"><b>Block</b></th>
+                <th class="w3-center"><b>Wertung</b></th>
+                <th><b>Team</b></th>
+                <th><b>Turnierergebnisse</b></th>
+                <th class="w3-center"><b>&empty;</b></th>
+            </tr>
+        </thead>
+        <?php foreach ($rang_tabelle as $spalte){?>
+            <tr>
+                <td><span class="w3-text-grey"><?=$spalte['rang']?></span></td>
+                <td class="w3-center"><?=Tabelle::rang_to_block($spalte['rang'])?></td>
+                <td class="w3-center"><?=Tabelle::rang_to_wertigkeit($spalte['rang'])?></td>
+                <td style="white-space: nowrap"><?=$spalte['teamname']?></td>
+                <td><?=htmlspecialchars_decode($spalte['string'])?></td>
+                <td class="w3-center"><?=$spalte['avg'] ?: 0?></td>
+            </tr>
+        <?php } //end foreach?>
+    </table>
+</div>
+
+<h2 class="w3-text-primary">Turniere der Saison <?=$saisondetails?></h2>
+<!-- Turnierliste -->
 <div class="w3-responsive w3-card">
     <table class="w3-table w3-striped">
         <thead class="w3-primary">
