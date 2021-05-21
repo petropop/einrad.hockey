@@ -182,13 +182,21 @@ class Archiv
             LEFT JOIN (SELECT saison, count(*) as anzahl FROM `archiv_teams_liga` WHERE ligateam = 'Ja' GROUP BY saison) AS teams ON archiv_turniere_liga.saison = teams.saison
             LEFT JOIN (
                 SELECT archiv_turniere_liga.saison, archiv_teams_liga.teamname
-                FROM archiv_turniere_ergebnisse, archiv_turniere_liga, archiv_teams_liga
-                WHERE archiv_turniere_ergebnisse.turnier_id = archiv_turniere_liga.turnier_id
-                AND archiv_turniere_ergebnisse.team_id = archiv_teams_liga.team_id
-                AND archiv_turniere_ergebnisse.platz = 1
-                AND archiv_turniere_ergebnisse.turnier_id = 827) as meister ON archiv_turniere_liga.saison = meister.saison
+                FROM archiv_turniere_ergebnisse
+                LEFT JOIN archiv_turniere_liga ON archiv_turniere_ergebnisse.turnier_id = archiv_turniere_liga.turnier_id
+                LEFT JOIN archiv_teams_liga ON archiv_turniere_ergebnisse.team_id = archiv_teams_liga.team_id AND archiv_turniere_liga.saison = archiv_teams_liga.saison
+                WHERE (
+                    archiv_turniere_ergebnisse.turnier_id = 64 OR
+                    archiv_turniere_ergebnisse.turnier_id = 827 OR  
+                    archiv_turniere_ergebnisse.turnier_id = 132 OR 
+                    archiv_turniere_ergebnisse.turnier_id = 271 OR 
+                    archiv_turniere_ergebnisse.turnier_id = 358 OR 
+                    archiv_turniere_ergebnisse.turnier_id = 472 OR 
+                    archiv_turniere_ergebnisse.turnier_id = 589 OR 
+                    archiv_turniere_ergebnisse.turnier_id = 202 OR 
+                    archiv_turniere_ergebnisse.turnier_id = 701
+                ) AND archiv_turniere_ergebnisse.platz = 1) as meister ON archiv_turniere_liga.saison = meister.saison
             GROUP BY archiv_turniere_liga.saison
-            HAVING archiv_turniere_liga.saison = 26
             ORDER BY archiv_turniere_liga.saison DESC
         ";
 
@@ -232,7 +240,7 @@ class Archiv
     public static function get_ergebnisse(int $turnier_id)
     {
         $sql = "
-            SELECT platz, teamname, ergebnis
+            SELECT platz, teamname, ergebnis, ligateam
             FROM archiv_turniere_ergebnisse
             LEFT JOIN archiv_turniere_liga ON archiv_turniere_ergebnisse.turnier_id = archiv_turniere_liga.turnier_id
             LEFT JOIN archiv_teams_liga ON archiv_turniere_ergebnisse.team_id = archiv_teams_liga.team_id AND archiv_turniere_liga.saison = archiv_teams_liga.saison
@@ -248,7 +256,7 @@ class Archiv
     public static function get_teams(int $turnier_id)
     {
         $sql = "
-            SELECT teamname
+            SELECT teamname, ligateam
             FROM archiv_turniere_ergebnisse
             LEFT JOIN archiv_turniere_liga ON archiv_turniere_ergebnisse.turnier_id = archiv_turniere_liga.turnier_id
             LEFT JOIN archiv_teams_liga ON archiv_turniere_ergebnisse.team_id = archiv_teams_liga.team_id AND archiv_turniere_liga.saison = archiv_teams_liga.saison
