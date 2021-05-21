@@ -11,6 +11,15 @@ $spiele = Archiv::get_spiele($turnier_id);
 $ergebnisse = Archiv::get_ergebnisse($turnier_id);
 $turnierdetails = Archiv::get_turnierdetails($turnier_id);
 
+$nlteams = FALSE;
+foreach ($teams as $team) {
+    if ($team['ligateam'] == 'Nein') {
+        $nlteams = TRUE; 
+    }
+}
+
+$counter = 1;
+
 /////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////LAYOUT///////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -27,16 +36,19 @@ include '../../templates/header.tmp.php';
     <table class="w3-table w3-striped">
         <thead class="w3-primary">
             <tr>
+                <th><b>#</b></th>
                 <th><b>Teams</b></th>
             </tr>
         </thead>
     <?php foreach ($teams as $team) {?>
         <tr>
-            <td><?=$team['teamname']?></td>
+            <td><?=$counter?></td>
+            <td><?=$team['ligateam'] == 'Ja' ? $team['teamname'] : $team['teamname'] . '*'?></td>
         </tr>
-    <?php } ?>
+    <?php $counter++; } ?>
     </table>
 </div>
+<p class="w3-text-grey"><?=$nlteams ? '* Nichtligateam' : ''?></p>
 
 <h2 class="w3-text-primary">Spiele</h2>
 <div class="w3-responsive w3-card">
@@ -65,6 +77,7 @@ include '../../templates/header.tmp.php';
     <?php } ?>
     </table>
 </div>
+<p class="w3-text-grey"><?=$nlteams ? '* Nichtligateam' : ''?></p>
 
 <h2 class="w3-text-primary">Turnierergebnis</h2>
 <div class="w3-responsive w3-card">
@@ -79,12 +92,13 @@ include '../../templates/header.tmp.php';
     <?php foreach ($ergebnisse as $ergebnis) {?>
         <tr>
             <td><?=$ergebnis['platz']?></td>
-            <td><?=$ergebnis['teamname']?></td>
+            <td><?=$ergebnis['ligateam'] == 'Ja' ? $ergebnis['teamname'] : $ergebnis['teamname'] . '*'?></td>
             <td><?=$ergebnis['ergebnis']?></td>
         </tr>
     <?php } ?>
     </table>
 </div>
+<p class="w3-text-grey"><?=$nlteams ? '* Nichtligateam' : ''?></p>
 
 
 <?php include '../../templates/footer.tmp.php';
