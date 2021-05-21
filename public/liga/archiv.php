@@ -15,10 +15,11 @@ Html::$content = 'Hier kann man die Ergebnisse und Tabellen seit der ersten Sais
 include '../../templates/header.tmp.php';
 ?>
 
+<?php Html::notice("Im Moment wird das Archiv vollständig überarbeitet. Die Informationen der Saisons 2020 und 2020/21 in vollen Umfang vorhanden. Bei den restlichen Saisons bitten wir um Geduld. Das vorherige Archiv kann <a href='" . NAV::LINK_ARCHIV . "'>hier</a> eingesehen werden.", 'Überarbeitung', false); ?>
+
 <!-- Archiv -->
 <h1 class="w3-text-primary">Archiv</h1>
 
-<p><i>Im Moment wird an einer Überführung des Archivs in das neue System gearbeitet. Dies werden wir Stück für Stück nachholen.</i></p>
 <p>Die Deutsche Einradhockeyliga spielt seit 1995 den <i>Meister der Deutschen Einradhockeyliga</i> aus. In der ersten Saison wurde nach einem Modus Jeder-gegen-Jeden gespielt. Meister wurde das Team mit den meisten Punkten. Seit 1996 wird in einem Turniermodus gespielt und am Ende der Saison in einem Finalturnier der Meister der Deutschen Einradhockeyliga ermittelt.</p>
 
 <div class="w3-responsive w3-card w3-section">
@@ -26,8 +27,8 @@ include '../../templates/header.tmp.php';
         <thead class="w3-primary">
             <tr>
                 <th><b>Saison</b></th>
-                <th><b>Turniere</b></th>
                 <th><b>Teams</b></th>
+                <th><b>Turniere</b></th>
                 <th><b>Meister der Deutschen Einradhockeyliga</b></th>
             </tr>
         </thead>
@@ -41,8 +42,5 @@ include '../../templates/header.tmp.php';
     <?php } ?>
     </table>
 </div>
-
-<!-- iframes sind ein sonderfall, html5 depreciated -->
-<iframe src="<?= Nav::LINK_ARCHIV ?>" style="width:100%;height:800px;" class="archiv w3-border-0" title="Archiv der Deutschen Einradhockeyliga"></iframe>
 
 <?php include '../../templates/footer.tmp.php';
