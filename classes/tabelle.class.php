@@ -203,10 +203,11 @@ class Tabelle
      * @param int $saison
      * @return array
      */
-    public static function get_meisterschafts_tabelle(int $spieltag, int $saison = Config::SAISON): array
+    public static function get_meisterschafts_tabelle(int $spieltag, int $saison = Config::SAISON, bool $aktuell = TRUE): array
     {
 
-        $sql = "
+        if ($aktuell) {
+            $sql = "
                 SELECT turniere_ergebnisse.ergebnis, turniere_ergebnisse.turnier_id, turniere_liga.datum, 
                 turniere_liga.saison, teams_liga.aktiv, teams_liga.teamname, teams_liga.team_id 
                 FROM turniere_ergebnisse
@@ -219,8 +220,30 @@ class Tabelle
                 AND (turniere_liga.saison = ?) 
                 AND (turniere_liga.spieltag <= ?)
                 ORDER BY ergebnis DESC, RAND()
-                ";
-        $result = db::$db->query($sql, $saison, $spieltag)->esc()->fetch();
+            ";
+
+            $result = db::$db->query($sql, $saison, $spieltag)->esc()->fetch();
+
+        } else {
+            $sql = "
+            SELECT ergebnis, turnier_id, datum, saison, teamname, archiv_teams_liga.team_id 
+            FROM archiv_teams_liga
+            LEFT JOIN (
+                SELECT archiv_turniere_ergebnisse.*, archiv_turniere_liga.datum
+                FROM archiv_turniere_liga
+                LEFT JOIN archiv_turniere_ergebnisse ON archiv_turniere_liga.turnier_id = archiv_turniere_ergebnisse.turnier_id  
+                WHERE saison = ?
+                AND tblock NOT LIKE '%final%'
+                AND tblock NOT LIKE '%quali%') 
+                AS saisonturniere ON saisonturniere.team_id = archiv_teams_liga.team_id
+            WHERE archiv_teams_liga.saison = ?
+            AND archiv_teams_liga.ligateam = 'Ja'
+            ORDER BY ergebnis DESC, RAND()
+            ";
+
+            $result = db::$db->query($sql, $saison, $saison)->esc()->fetch();
+
+        }
 
         $counter = $return = [];
         foreach($result as $eintrag){
@@ -228,7 +251,15 @@ class Tabelle
             if (isset($return[$team_id])) {
                 if ($counter[$team_id] <= 5) {
                     $return[$team_id]['einzel_ergebnisse'][] = $eintrag['ergebnis'];
-                    $return[$team_id]['string'] .= "+" . Html::link("ergebnisse.php#" . $eintrag['turnier_id'], $eintrag['ergebnis']);
+                    if ($aktuell) {
+                        $return[$team_id]['string'] .= "+" . Html::link("ergebnisse.php#" . $eintrag['turnier_id'], $eintrag['ergebnis']);
+                    } else {
+                        if (isset($eintrag['turnier_id'])) {
+                            $return[$team_id]['string'] .= "+" . Html::link("archiv_turnier.php?turnier_id=" . $eintrag['turnier_id'], $eintrag['ergebnis']);
+                        } else {
+                            $return[$team_id]['string'] .= '';
+                        }
+                    }
                     $return[$team_id]['summe'] += $eintrag['ergebnis'];
                 }
             } else {
@@ -236,7 +267,15 @@ class Tabelle
                 $return[$team_id]['einzel_ergebnisse'][] = $eintrag['ergebnis'];
                 $return[$team_id]['team_id'] = $team_id;
                 $return[$team_id]['teamname'] = $eintrag['teamname'];
-                $return[$team_id]['string'] = Html::link("ergebnisse.php#" . $eintrag['turnier_id'], $eintrag['ergebnis']);
+                if ($aktuell) {
+                    $return[$team_id]['string'] = Html::link("ergebnisse.php#" . $eintrag['turnier_id'], $eintrag['ergebnis']);
+                } else {
+                    if (isset($eintrag['turnier_id'])) {
+                        $return[$team_id]['string'] = Html::link("archiv_turnier.php?turnier_id=" . $eintrag['turnier_id'], $eintrag['ergebnis']);
+                    } else {
+                        $return[$team_id]['string'] = '';
+                    }
+                }
                 $return[$team_id]['summe'] = $eintrag['ergebnis'];
                 $counter[$team_id] = 1;
             }
@@ -260,7 +299,11 @@ class Tabelle
         }
 
         // Hinzufügen der Strafen:
-        $strafen = Team::get_strafen();
+        if ($aktuell) {
+            $strafen = Team::get_strafen();
+        } else {
+            $strafen = Team::get_strafen($saison, FALSE);
+        }
         foreach ($strafen as $strafe) {
             // Hinzufügen des Sterns
             if (isset($return[$strafe['team_id']]['strafe_stern'])) {

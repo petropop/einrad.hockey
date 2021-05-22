@@ -260,9 +260,10 @@ class Team
      *
      * @return array
      */
-    public static function get_strafen(): array
+    public static function get_strafen(int $saison = Config::SAISON, bool $aktuell = TRUE): array
     {
-        $sql = "
+        if ($aktuell) {
+            $sql = "
                 SELECT teams_strafen.*, teams_liga.teamname, turniere_details.ort, turniere_liga.datum 
                 FROM teams_strafen
                 INNER JOIN teams_liga
@@ -271,11 +272,23 @@ class Team
                 ON turniere_liga.turnier_id = teams_strafen.turnier_id
                 LEFT JOIN turniere_details
                 ON turniere_details.turnier_id = teams_strafen.turnier_id
-                WHERE teams_strafen.saison = '" . Config::SAISON . "'
+                WHERE teams_strafen.saison = '" . $saison . "'
                 AND teams_liga.aktiv = 'Ja'
                 ORDER BY turniere_liga.datum DESC
-                ";
-        return db::$db->query($sql)->esc()->fetch('strafe_id');
+            ";
+            return db::$db->query($sql)->esc()->fetch('strafe_id');
+        
+        } else {
+
+            $sql = "
+                SELECT team_id, archiv_teams_strafen.turnier_id, strafe as prozentsatz, 'Nein' as verwarnung
+                FROM archiv_teams_strafen
+                LEFT JOIN archiv_turniere_liga ON archiv_turniere_liga.turnier_id = archiv_teams_strafen.turnier_id
+                WHERE saison = '" . $saison . "'
+            ";
+
+            return db::$db->query($sql)->esc()->fetch();
+        }
     }
 
     /**

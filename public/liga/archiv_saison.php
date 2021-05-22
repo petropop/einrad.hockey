@@ -9,6 +9,7 @@ $saison = $_GET['saison'];
 $saisondetails = Archiv::get_saisondetails($saison);
 $turniere = Archiv::get_turniere($saison);
 
+$meisterschafts_tabelle = Tabelle::get_meisterschafts_tabelle(0, $saison, FALSE);
 $rang_tabelle = Tabelle::get_rang_tabelle(0, $saison, FALSE);
 
 /////////////////////////////////////////////////////////////////////////////
@@ -21,6 +22,28 @@ include '../../templates/header.tmp.php';
 
 <!-- Archiv -->
 <h1 class="w3-text-primary">Archiv der Saison <?=$saisondetails?></h1>
+
+<h2 class="w3-text-primary">Meisterschaftstabelle der Saison <?=$saisondetails?></h2>
+<div class="w3-responsive w3-card">
+    <table class="w3-table w3-striped">
+        <thead class="w3-primary">
+            <tr>
+                <th><b>Platz</b></th>
+                <th><b>Team</b></th>
+                <th><b>Turnierergebnisse</b></th>
+                <th><b>&sum;</b></th>
+            </tr>
+        </thead>
+        <?php foreach ($meisterschafts_tabelle as $spalte){?>
+            <tr>
+                <td class="<?=$platz_color[$spalte['platz']] ?? ''?>"><?=$spalte['platz'] ?? ''?></td>
+                <td style="white-space: nowrap"><?=$spalte['teamname']?></td>
+                <td><?=htmlspecialchars_decode($spalte['string'])?></td>
+                <td><?=$spalte['summe'] ?: 0?><?=$spalte['strafe_stern'] ?? ''?></a></td>
+            </tr>
+        <?php } //end foreach?>
+    </table>    
+</div>
 
 <h2 class="w3-text-primary">Rangtabelle der Saison <?=$saisondetails?></h2>
 <!-- Rangtabelle -->
