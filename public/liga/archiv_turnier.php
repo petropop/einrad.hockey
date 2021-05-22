@@ -51,6 +51,7 @@ include '../../templates/header.tmp.php';
 <p class="w3-text-grey"><?=$nlteams ? '* Nichtligateam' : ''?></p>
 
 <h2 class="w3-text-primary">Spiele</h2>
+<?php if(!empty($spiele)) { ?>
 <div class="w3-responsive w3-card">
     <table class="w3-table w3-striped">
         <thead class="w3-primary">
@@ -78,6 +79,13 @@ include '../../templates/header.tmp.php';
     </table>
 </div>
 <p class="w3-text-grey"><?=$nlteams ? '* Nichtligateam' : ''?></p>
+<?php } else { ?>
+<div class="w3-card w3-panel w3-leftbar w3-border-yellow w3-pale-yellow">
+    <div class="w3-section">
+    Die Spielergebnisse können zur Zeit nicht dargestellt werden. Wir bitten um Geduld.
+    </div>
+</div>
+<?php } ?>
 
 <h2 class="w3-text-primary">Turnierergebnis</h2>
 <div class="w3-responsive w3-card">
