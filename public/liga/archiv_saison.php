@@ -38,6 +38,7 @@ include '../../templates/header.tmp.php';
     </table>    
 </div>
 
+<?php if(isset($rang_tabelle)) { ?> 
 <h2 class="w3-text-primary">Rangtabelle der Saison <?=$saisondetails?></h2>
 <!-- Rangtabelle -->
 <div class="w3-responsive w3-card">
@@ -64,6 +65,7 @@ include '../../templates/header.tmp.php';
         <?php } //end foreach?>
     </table>
 </div>
+<?php } //end if?>
 
 <h2 class="w3-text-primary">Turniere der Saison <?=$saisondetails?></h2>
 <!-- Turnierliste -->
