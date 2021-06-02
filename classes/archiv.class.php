@@ -402,6 +402,27 @@ class Archiv
                 "DE" => [33, 40],
                 "E" => [41, INF]
             ];
+        } elseif ($saison >= 13) {
+            $zuordnung = [
+                "A" => [1, 6],
+                "AB" => [7, 12],
+                "BC" => [13, 18],
+                "CD" => [19, 24],
+                "DE" => [25, 30],
+                "E" => [31, INF]
+            ];
+        } elseif ($saison >= 9) {
+            $zuordnung = [
+                "A" => [1, 6],
+                "AB" => [7, 12],
+                "BC" => [13, 18],
+                "CD" => [19, 24],
+                "D" => [25, INF]
+            ];
+        } elseif ($saison >= 0) {
+            $zuordnung = [
+                "" => [1, INF]
+            ];
         }
 
         return $zuordnung;
