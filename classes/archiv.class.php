@@ -247,7 +247,7 @@ class Archiv
     public static function get_teams(int $turnier_id)
     {
         $sql = "
-            SELECT teamname, ligateam
+            SELECT archiv_teams_liga.team_id, teamname, ligateam
             FROM archiv_turniere_ergebnisse
             LEFT JOIN archiv_turniere_liga ON archiv_turniere_ergebnisse.turnier_id = archiv_turniere_liga.turnier_id
             LEFT JOIN archiv_teams_liga ON archiv_turniere_ergebnisse.team_id = archiv_teams_liga.team_id AND archiv_turniere_liga.saison = archiv_teams_liga.saison
@@ -263,7 +263,7 @@ class Archiv
     public static function get_turnierdetails(int $turnier_id)
     {
         $sql = "
-            SELECT ort, datum
+            SELECT ort, datum, spieltag, saison
             FROM archiv_turniere_liga
             LEFT JOIN archiv_turniere_details ON archiv_turniere_liga.turnier_id = archiv_turniere_details.turnier_id
             WHERE archiv_turniere_liga.turnier_id = ?
@@ -285,5 +285,125 @@ class Archiv
         $result = db::$db->query($sql, $saison)->esc()->fetch_one();
 
         return $result;
+    }
+
+        /**
+     * Gibt die Platzierung eines Teams in der Rangtabelle zurück
+     *
+     * @param int $team_id
+     * @param int|null $spieltag
+     * @return int|null
+     */
+    public static function get_team_rang(int $team_id, int $spieltag = NULL): ?int
+    {
+        return $rangtabelle[$spieltag][$team_id]['rang'] ?? NULL;
+    }
+
+        /**
+     * Weist dem Platz in der Rangtabelle eine Wertung zu
+     *
+     * @param int|null $rang
+     * @return int|null
+     */
+    public static function rang_to_wertigkeit(?int $rang, int $saison): ?int
+    {
+        // Nichtligateam
+        if (is_null($rang)){
+            return NULL;
+        }
+
+        if ($saison >= 22) {
+            // Platz 1 bis 43;
+            if (1 <= $rang && 43 >= $rang){
+                return round(250 * 0.955 ** ($rang - 1));
+            }
+
+            // Platz 44 bis Rest
+            return max([round(250 * 0.955 ** (43) * 0.97 ** ($rang - 1 - 43)), 15]);
+        } elseif ($saison >= 20) {
+            if (1 <= $rang && 13 >= $rang) {
+                return round(200 - (($rang - 1) * 8));
+            } 
+            if (14 <= $rang && 25 >= $rang) {
+                return round(104 - (($rang - 13) * 4));
+            }
+            if (26 <= $rang && 37 >= $rang) {
+                return round(56 - (($rang - 25) * 2));
+            }
+            return max([round(31 - ($rang - 38)), 20]);
+        } elseif ($saison >= 16) {
+            if (1 <= $rang && 8 >= $rang) {
+                return round(150 - (($rang - 1) * 2));
+            } 
+            if (9 <= $rang && 16 >= $rang) {
+                return round(118 - (($rang - 9) * 2));
+            }
+            if (17 <= $rang && 24 >= $rang) {
+                return round(90 - (($rang - 17) * 2));
+            }
+            if (25 <= $rang && 32 >= $rang) {
+                return round(66 - (($rang - 25) * 2));
+            }
+            return max([round(46 - (($rang - 33) * 2)), 6]);
+        }
+
+        return NULL;
+    }
+
+    /**
+     * Weist dem Platz in der Rangtabelle einen Block zu
+     *
+     * @param int|null $rang
+     * @return string|null
+     */
+    public static function rang_to_block(?int $rang, int $saison): ?string
+    {
+        $zuordnung = self::get_block_zuordnung($saison);
+        
+        // Nichtligateam
+        if (is_null($rang)) return NULL;
+
+        // Blockzuordnung
+        foreach ($zuordnung as $block => $range) {
+            if ($range[0] <= $rang && $range[1] >= $rang){
+                return $block;
+            }
+        }
+    }
+
+    public static function get_block_zuordnung(int $saison)
+    {
+        if ($saison >= 22) {
+            $zuordnung = [
+                "A" => [1, 6],
+                "AB" => [7, 13],
+                "BC" => [14, 21],
+                "CD" => [22, 31],
+                "DE" => [32, 43],
+                "EF" => [44, 57],
+                "F" => [58, INF]
+            ];
+        } elseif ($saison >= 20) {
+            $zuordnung = [
+                "A" => [1, 6],
+                "AB" => [7, 12],
+                "BC" => [13, 18],
+                "CD" => [19, 24],
+                "DE" => [25, 30],
+                "EF" => [31, 36],
+                "F" => [37, INF]
+            ];
+        } elseif ($saison >= 16) {
+            $zuordnung = [
+                "A" => [1, 8],
+                "AB" => [9, 16],
+                "BC" => [17, 24],
+                "CD" => [25, 32],
+                "DE" => [33, 40],
+                "E" => [41, INF]
+            ];
+        }
+
+        return $zuordnung;
     }
 }

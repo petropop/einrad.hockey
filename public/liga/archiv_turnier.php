@@ -25,12 +25,18 @@ include '../../templates/header.tmp.php';
             <tr>
                 <th><b>#</b></th>
                 <th><b>Teams</b></th>
+                <th><b>Teamrang</b></th>
+                <th><b>Wertigkeit</b></th>
+                <th><b>Block</b></th>
             </tr>
         </thead>
     <?php foreach ($teams as $team) {?>
         <tr>
             <td><?=$counter?></td>
             <td><?=$team['ligateam'] == 'Ja' ? $team['teamname'] : $team['teamname'] . '*'?></td>
+            <td><?=$rangtabelle[$team['team_id']]['rang'] ?? NULL?></td>
+            <td><?=Archiv::rang_to_wertigkeit($rangtabelle[$team['team_id']]['rang'] ?? NULL, $turnierdetails['saison'])?></td>
+            <td><?=Archiv::rang_to_block($rangtabelle[$team['team_id']]['rang'] ?? NULL, $turnierdetails['saison'])?></td>
         </tr>
     <?php $counter++; } ?>
     </table>

@@ -17,11 +17,36 @@ include '../../templates/header.tmp.php';
 <h1 class="w3-text-primary">Archiv der Saison <?=$saisondetails?></h1>
 
 <h2 class="w3-text-primary">Meisterschaftstabelle der Saison <?=$saisondetails?></h2>
-<div class="w3-responsive w3-card">
+
+<?php if ($saison >= 21) {?>
+    <div class="w3-responsive w3-card">
+        <table class="w3-table w3-striped">
+            <thead class="w3-primary">
+                <tr>
+                    <th><b>Platz</b></th>
+                    <th><b>Team</b></th>
+                    <th><b>Turnierergebnisse</b></th>
+                    <th><b>&sum;</b></th>
+                </tr>
+            </thead>
+            <?php foreach ($meisterschafts_tabelle as $spalte){?>
+                <tr>
+                    <td class="<?=$platz_color[$spalte['platz']] ?? ''?>"><?=$spalte['platz'] ?? ''?></td>
+                    <td style="white-space: nowrap"><?=$spalte['teamname']?></td>
+                    <td><?=htmlspecialchars_decode($spalte['string'])?></td>
+                    <td><?=$spalte['summe'] ?: 0?><?=$spalte['strafe_stern'] ?? ''?></a></td>
+                </tr>
+            <?php } //end foreach?>
+        </table>    
+    </div>
+<?php } else {?>
+    <div class="w3-responsive w3-card">
     <table class="w3-table w3-striped">
         <thead class="w3-primary">
             <tr>
                 <th><b>Platz</b></th>
+                <th><b>Block</b></th>
+                <th><b>Wertung</b></th>
                 <th><b>Team</b></th>
                 <th><b>Turnierergebnisse</b></th>
                 <th><b>&sum;</b></th>
@@ -30,6 +55,8 @@ include '../../templates/header.tmp.php';
         <?php foreach ($meisterschafts_tabelle as $spalte){?>
             <tr>
                 <td class="<?=$platz_color[$spalte['platz']] ?? ''?>"><?=$spalte['platz'] ?? ''?></td>
+                <td class="w3-center"><?=Archiv::rang_to_block($spalte['platz'], $saison)?></td>
+                <td class="w3-center"><?=Archiv::rang_to_wertigkeit($spalte['platz'], $saison)?></td>
                 <td style="white-space: nowrap"><?=$spalte['teamname']?></td>
                 <td><?=htmlspecialchars_decode($spalte['string'])?></td>
                 <td><?=$spalte['summe'] ?: 0?><?=$spalte['strafe_stern'] ?? ''?></a></td>
@@ -37,6 +64,7 @@ include '../../templates/header.tmp.php';
         <?php } //end foreach?>
     </table>    
 </div>
+<?php } ?>
 
 <?php if(isset($rang_tabelle)) { ?> 
 <h2 class="w3-text-primary">Rangtabelle der Saison <?=$saisondetails?></h2>
@@ -56,8 +84,8 @@ include '../../templates/header.tmp.php';
         <?php foreach ($rang_tabelle as $spalte){?>
             <tr>
                 <td><span class="w3-text-grey"><?=$spalte['rang']?></span></td>
-                <td class="w3-center"><?=Tabelle::rang_to_block($spalte['rang'])?></td>
-                <td class="w3-center"><?=Tabelle::rang_to_wertigkeit($spalte['rang'])?></td>
+                <td class="w3-center"><?=Archiv::rang_to_block($spalte['rang'], $saison)?></td>
+                <td class="w3-center"><?=Archiv::rang_to_wertigkeit($spalte['rang'], $saison)?></td>
                 <td style="white-space: nowrap"><?=$spalte['teamname']?></td>
                 <td><?=htmlspecialchars_decode($spalte['string'])?></td>
                 <td class="w3-center"><?=$spalte['avg'] ?: 0?></td>

@@ -386,9 +386,6 @@ class Tabelle
             $result = db::$db->query($sql, $spieltag, $saison, $saison)->esc()->fetch();
 
         } else {
-            
-            // Bisher ist keine Unterscheidung der Spieltage vorhanden, kann aber eingesetzt werden
-            // AND ((archiv_turniere_liga.saison = ? AND archiv_turniere_liga.spieltag <= 15) OR archiv_turniere_liga.saison = ? - 1)
 
             $sql = "
                 SELECT archiv_turniere_ergebnisse.ergebnis, archiv_turniere_ergebnisse.turnier_id, archiv_turniere_liga.datum, archiv_turniere_liga.saison, archiv_teams_liga.  teamname, archiv_teams_liga.team_id, archiv_turniere_liga.spieltag
@@ -398,12 +395,12 @@ class Tabelle
                 WHERE archiv_teams_liga.ligateam = 'Ja'
                 AND archiv_turniere_liga.tblock NOT LIKE '%final%' 
                 AND archiv_turniere_liga.tblock NOT LIKE '%quali%'
+                AND ((archiv_turniere_liga.spieltag <= ? AND archiv_turniere_liga.saison = ?) OR archiv_turniere_liga.saison = ? - 1)
                 AND archiv_teams_liga.saison = ?
-                AND (archiv_turniere_liga.saison = ? OR archiv_turniere_liga.saison = ? - 1)
                 ORDER BY archiv_teams_liga.team_id, archiv_turniere_liga.datum DESC
             ";
 
-            $result = db::$db->query($sql, $saison, $saison, $saison)->esc()->fetch();
+            $result = db::$db->query($sql, $spieltag, $saison, $saison, $saison)->esc()->fetch();
 
         }
         
