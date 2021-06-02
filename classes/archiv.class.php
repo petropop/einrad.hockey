@@ -345,6 +345,22 @@ class Archiv
                 return round(66 - (($rang - 25) * 2));
             }
             return max([round(46 - (($rang - 33) * 2)), 6]);
+        } elseif ($saison >= 13) {
+            if (1 <= $rang && 6 >= $rang) {
+                return round(134 - (($rang - 1) * 2));
+            } 
+            if (7 <= $rang && 12 >= $rang) {
+                return round(114 - (($rang - 7) * 2));
+            }
+            if (13 <= $rang && 18 >= $rang) {
+                return round(96 - (($rang - 13) * 2));
+            }
+            if (19 <= $rang && 24 >= $rang) {
+                return round(66 - (($rang - 19) * 2));
+            }
+            return max([round(46 - (($rang - 25) * 2)), 2]);
+        } elseif ($saison >= 8) {
+            return max([round(132 - (($rang - 1) * 2)), 20]);
         }
 
         return NULL;
