@@ -1,7 +1,5 @@
 <?php
 
-db::initialize_archiv();
-
 $saison = $_GET['saison'];
 $saisondetails = Archiv::get_saisondetails($saison);
 $turniere = Archiv::get_turniere($saison);

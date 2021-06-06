@@ -72,6 +72,7 @@ if (isset($_POST['mailbot'])){
 //Saison archivieren
 if (isset($_POST['archiv'])){
     $saison = Config::SAISON;
+    db::initialize_archiv();
     Archiv::archivieren($saison);
 }
 

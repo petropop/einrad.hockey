@@ -18,7 +18,7 @@ class Archiv
      * @param $saison
      */
     public static function transfer_teams(int $saison)
-    {
+    {       
         $extract_sql = "
             SELECT team_id, ? as saison, teamname, ligateam
             FROM `teams_liga`
@@ -33,7 +33,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         foreach ($result as $team) {
-            db::$db->query($insert_sql, $team['team_id'], $team['saison'], $team['teamname'], $team['ligateam']);
+            db::$archiv->query($insert_sql, $team['team_id'], $team['saison'], $team['teamname'], $team['ligateam']);
         }
     }
 
@@ -59,7 +59,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         foreach ($result as $turnier) {
-            db::$db->query($insert_sql, $turnier['turnier_id'], $turnier['saison'], $turnier['spieltag'], $turnier['datum'], $turnier['plaetze'], $turnier['tblock'], $turnier['art']);
+            db::$archiv->query($insert_sql, $turnier['turnier_id'], $turnier['saison'], $turnier['spieltag'], $turnier['datum'], $turnier['plaetze'], $turnier['tblock'], $turnier['art']);
         }
     }
 
@@ -84,7 +84,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();      
 
         foreach ($result as $spiel) {
-            db::$db->query($insert_sql, $spiel['turnier_id'], $spiel['spiel_id'], $spiel['team_id_a'], $spiel['team_id_b'], $spiel['schiri_team_id_a'], $spiel['schiri_team_id_b'], $spiel['tore_a'], $spiel['tore_b'], $spiel['penalty_a'], $spiel['penalty_b']);
+            db::$archiv->query($insert_sql, $spiel['turnier_id'], $spiel['spiel_id'], $spiel['team_id_a'], $spiel['team_id_b'], $spiel['schiri_team_id_a'], $spiel['schiri_team_id_b'], $spiel['tore_a'], $spiel['tore_b'], $spiel['penalty_a'], $spiel['penalty_b']);
         }
     }
 
@@ -105,7 +105,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();      
 
         foreach ($result as $ergebnis) {
-            db::$db->query($insert_sql, $ergebnis['team_id'], $ergebnis['turnier_id'], $ergebnis['ergebnis'], $ergebnis['platz']);
+            db::$archiv->query($insert_sql, $ergebnis['team_id'], $ergebnis['turnier_id'], $ergebnis['ergebnis'], $ergebnis['platz']);
         }
     }
 
@@ -127,7 +127,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         foreach ($result as $detail) {
-            db::$db->query($insert_sql, $detail['turnier_id'], $detail['tname'], $detail['hallenname'], $detail['startzeit'], $detail['ausrichter'], $detail['ort'], $detail['format']);
+            db::$archiv->query($insert_sql, $detail['turnier_id'], $detail['tname'], $detail['hallenname'], $detail['startzeit'], $detail['ausrichter'], $detail['ort'], $detail['format']);
         }
     }
 
@@ -147,7 +147,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         foreach ($result as $strafe) {
-            db::$db->query($insert_sql, $strafe['team_id'], $strafe['turnier_id'], $strafe['strafe']);
+            db::$archiv->query($insert_sql, $strafe['team_id'], $strafe['turnier_id'], $strafe['strafe']);
         }
     }
 
@@ -168,7 +168,7 @@ class Archiv
         $result = db::$db->query($extract_sql, $saison)->esc()->fetch();
 
         foreach ($result as $spielplan) {
-            db::$db->query($insert_sql, $spielplan['spielplan'], $spielplan['plaetze'], $spielplan['anzahl_halbzeiten'], $spielplan['halbzeit_laenge'], $spielplan['puffer'], $spielplan['pausen']);
+            db::$archiv->query($insert_sql, $spielplan['spielplan'], $spielplan['plaetze'], $spielplan['anzahl_halbzeiten'], $spielplan['halbzeit_laenge'], $spielplan['puffer'], $spielplan['pausen']);
         }
     }
 
@@ -191,7 +191,7 @@ class Archiv
             ORDER BY archiv_turniere_liga.saison DESC
         ";
 
-        $result = db::$db->query($sql)->esc()->fetch();
+        $result = db::$archiv->query($sql)->esc()->fetch();
 
         return $result;
     }
@@ -206,7 +206,7 @@ class Archiv
             ORDER BY datum ASC
         ";
 
-        $result = db::$db->query($sql, $saison)->esc()->fetch();
+        $result = db::$archiv->query($sql, $saison)->esc()->fetch();
 
         return $result;
     }
@@ -223,7 +223,7 @@ class Archiv
             ORDER BY spiel_id ASC
         ";
 
-        $result = db::$db->query($sql, $turnier_id)->esc()->fetch();
+        $result = db::$archiv->query($sql, $turnier_id)->esc()->fetch();
 
         return $result;
     }
@@ -239,7 +239,7 @@ class Archiv
             ORDER BY platz ASC
         ";
 
-        $result = db::$db->query($sql, $turnier_id)->esc()->fetch();
+        $result = db::$archiv->query($sql, $turnier_id)->esc()->fetch();
 
         return $result;
     }
@@ -255,7 +255,7 @@ class Archiv
             ORDER BY teamname ASC
         ";
 
-        $result = db::$db->query($sql, $turnier_id)->esc()->fetch();
+        $result = db::$archiv->query($sql, $turnier_id)->esc()->fetch();
 
         return $result;
     }
@@ -269,7 +269,7 @@ class Archiv
             WHERE archiv_turniere_liga.turnier_id = ?
         ";
 
-        $result = db::$db->query($sql, $turnier_id)->esc()->fetch_row();
+        $result = db::$archiv->query($sql, $turnier_id)->esc()->fetch_row();
 
         return $result;
     }
@@ -282,7 +282,7 @@ class Archiv
             WHERE saison_id = ?
         ";
 
-        $result = db::$db->query($sql, $saison)->esc()->fetch_one();
+        $result = db::$archiv->query($sql, $saison)->esc()->fetch_one();
 
         return $result;
     }

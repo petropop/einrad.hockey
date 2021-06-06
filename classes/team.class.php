@@ -287,7 +287,7 @@ class Team
                 WHERE saison = '" . $saison . "'
             ";
 
-            return db::$db->query($sql)->esc()->fetch();
+            return db::$archiv->query($sql)->esc()->fetch();
         }
     }
 

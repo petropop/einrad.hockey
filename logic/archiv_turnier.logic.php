@@ -1,7 +1,5 @@
 <?php
 
-db::initialize_archiv();
-
 $turnier_id = $_GET['turnier_id'];
 $teams = Archiv::get_teams($turnier_id);
 $spiele = Archiv::get_spiele($turnier_id);

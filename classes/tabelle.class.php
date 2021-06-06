@@ -241,7 +241,7 @@ class Tabelle
             ORDER BY ergebnis DESC, RAND()
             ";
 
-            $result = db::$db->query($sql, $saison, $saison)->esc()->fetch();
+            $result = db::$archiv->query($sql, $saison, $saison)->esc()->fetch();
 
         }
 
@@ -400,7 +400,7 @@ class Tabelle
                 ORDER BY archiv_teams_liga.team_id, archiv_turniere_liga.datum DESC
             ";
 
-            $result = db::$db->query($sql, $spieltag, $saison, $saison, $saison)->esc()->fetch();
+            $result = db::$archiv->query($sql, $spieltag, $saison, $saison, $saison)->esc()->fetch();
 
         }
         
