@@ -7,6 +7,9 @@ require_once '../../logic/archiv_turnier.logic.php';
 
 $counter = 1;
 
+db::debug($turnierdetails);
+db::debug($tabelle);
+
 /////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////LAYOUT///////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -25,7 +28,6 @@ include '../../templates/header.tmp.php';
             <tr>
                 <th><b>#</b></th>
                 <th><b>Teams</b></th>
-                <th><b>Teamrang</b></th>
                 <th><b>Wertigkeit</b></th>
                 <th><b>Block</b></th>
             </tr>
@@ -34,9 +36,13 @@ include '../../templates/header.tmp.php';
         <tr>
             <td><?=$counter?></td>
             <td><?=$team['ligateam'] == 'Ja' ? $team['teamname'] : $team['teamname'] . '*'?></td>
-            <td><?=$rangtabelle[$team['team_id']]['rang'] ?? NULL?></td>
-            <td><?=Archiv::rang_to_wertigkeit($rangtabelle[$team['team_id']]['rang'] ?? NULL, $turnierdetails['saison'])?></td>
-            <td><?=Archiv::rang_to_block($rangtabelle[$team['team_id']]['rang'] ?? NULL, $turnierdetails['saison'])?></td>
+            <?php if ($turnierdetails['saison'] >= 21) { ?>
+                <td><?=Archiv::rang_to_wertigkeit($tabelle[$team['team_id']]['rang'] ?? NULL, $turnierdetails['saison'])?></td>
+                <td><?=Archiv::rang_to_block($tabelle[$team['team_id']]['rang'] ?? NULL, $turnierdetails['saison'])?></td>
+            <?php } else { ?>
+                <td><?=Archiv::rang_to_wertigkeit($tabelle[$team['team_id']]['platz'] ?? NULL, $turnierdetails['saison'])?></td>
+                <td><?=Archiv::rang_to_block($tabelle[$team['team_id']]['platz'] ?? NULL, $turnierdetails['saison'])?></td>
+            <?php } ?>
         </tr>
     <?php $counter++; } ?>
     </table>
